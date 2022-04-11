@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-import signal, sys
+import signal
+import sys
 
-from cmsmap.main import main
 from cmsmap.lib.report import report
+from cmsmap.main import main
+
 
 def exit(signum, frame):
     signal.signal(signal.SIGINT, original_sigint)
@@ -18,6 +20,7 @@ def exit(signum, frame):
         report.message(msg)
         sys.exit(1)
     signal.signal(signal.SIGINT, exit)
+
 
 if __name__ == "__main__":
     original_sigint = signal.getsignal(signal.SIGINT)

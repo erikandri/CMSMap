@@ -28,7 +28,7 @@ def main():
         try:
             parser = argparse.ArgumentParser(
                 description="CMSmap tool v" + str(__version__) +
-                " - Simple CMS Scanner\nAuthor: Mike Manzotti",
+                            " - Simple CMS Scanner\nAuthor: Mike Manzotti",
                 formatter_class=RawTextHelpFormatter,
                 add_help=False,
                 epilog=examples)
@@ -38,34 +38,44 @@ def main():
             argspostexp = parser.add_argument_group("Post Exploitation")
             argsothers = parser.add_argument_group("Others")
             # Scan Arguments
-            argsscan.add_argument("target",help="target URL (e.g. 'https://example.com:8080/')", nargs='?')
-            argsscan.add_argument("-f", "--force",help="force scan (W)ordpress, (J)oomla or (D)rupal or (M)oodle",
-                metavar="W/J/D/M",default=None)
-            argsscan.add_argument("-F", "--fullscan",help="full scan using large plugin lists. False positives and slow!",
-                action="store_true", default=False)
-            argsscan.add_argument("-t", "--threads",help="number of threads (Default 5)",metavar="",default=5)
-            argsscan.add_argument("-a", "--agent",help="set custom user-agent", metavar="")
-            argsscan.add_argument("-H", "--header",help="add custom header (e.g. 'Authorization: Basic ABCD...')",metavar="")
-            argsscan.add_argument("-i", "--input",help="scan multiple targets listed in a given file",metavar="")
-            argsscan.add_argument("-o", "--output",help="save output in a file", metavar="")
-            argsscan.add_argument("-E", "--noedb",help="enumerate plugins without searching exploits",action="store_true", default=False)
-            argsscan.add_argument("-c", "--nocleanurls",help="disable clean urls for Drupal only",action="store_true", default=False)
-            argsscan.add_argument("-s", "--nosslcheck",help="don't validate the server's certificate",action="store_true", default=False)
-            argsscan.add_argument("-d","--dictattack",help="run low intense dictionary attack during scanning (5 attempts per user)", 
-                action="store_true",default=False)
+            argsscan.add_argument("target", help="target URL (e.g. 'https://example.com:8080/')", nargs='?')
+            argsscan.add_argument("-f", "--force", help="force scan (W)ordpress, (J)oomla or (D)rupal or (M)oodle",
+                                  metavar="W/J/D/M", default=None)
+            argsscan.add_argument("-F", "--fullscan",
+                                  help="full scan using large plugin lists. False positives and slow!",
+                                  action="store_true", default=False)
+            argsscan.add_argument("-t", "--threads", help="number of threads (Default 5)", metavar="", default=5)
+            argsscan.add_argument("-a", "--agent", help="set custom user-agent", metavar="")
+            argsscan.add_argument("-H", "--header", help="add custom header (e.g. 'Authorization: Basic ABCD...')",
+                                  metavar="")
+            argsscan.add_argument("-i", "--input", help="scan multiple targets listed in a given file", metavar="")
+            argsscan.add_argument("-o", "--output", help="save output in a file", metavar="")
+            argsscan.add_argument("-E", "--noedb", help="enumerate plugins without searching exploits",
+                                  action="store_true", default=False)
+            argsscan.add_argument("-c", "--nocleanurls", help="disable clean urls for Drupal only", action="store_true",
+                                  default=False)
+            argsscan.add_argument("-s", "--nosslcheck", help="don't validate the server's certificate",
+                                  action="store_true", default=False)
+            argsscan.add_argument("-d", "--dictattack",
+                                  help="run low intense dictionary attack during scanning (5 attempts per user)",
+                                  action="store_true", default=False)
             # Brute-Force Arguments
             argsbrute.add_argument("-u", "--usr", help="username or username file", metavar="")
             argsbrute.add_argument("-p", "--psw", help="password or password file", metavar="")
-            argsbrute.add_argument("-x", "--noxmlrpc", help="brute forcing WordPress without XML-RPC", action="store_false", default=True)
+            argsbrute.add_argument("-x", "--noxmlrpc", help="brute forcing WordPress without XML-RPC",
+                                   action="store_false", default=True)
             # Post Exploitation Arguments
-            argspostexp.add_argument("-k", "--crack", 
-                help="password hashes file (Require hashcat installed. For WordPress and Joomla only)", metavar="")
+            argspostexp.add_argument("-k", "--crack",
+                                     help="password hashes file (Require hashcat installed. For WordPress and Joomla only)",
+                                     metavar="")
             argspostexp.add_argument("-w", "--wordlist", help="wordlist file", metavar="")
             # Others Arguments
-            argsothers.add_argument("-v", "--verbose", help="verbose mode (Default false)",action="store_true", default=False)
-            argsothers.add_argument("-h", "--help", help="show this help message and exit",action="help")
-            argsothers.add_argument("-D", "--default", help="run CMSmap with default options", action="store_true", default=False)
-            argsothers.add_argument("-U", "--update", help="use (C)MSmap, (P)lugins or (PC) for both", metavar= "")
+            argsothers.add_argument("-v", "--verbose", help="verbose mode (Default false)", action="store_true",
+                                    default=False)
+            argsothers.add_argument("-h", "--help", help="show this help message and exit", action="help")
+            argsothers.add_argument("-D", "--default", help="run CMSmap with default options", action="store_true",
+                                    default=False)
+            argsothers.add_argument("-U", "--update", help="use (C)MSmap, (P)lugins or (PC) for both", metavar="")
             args = parser.parse_args()
         except:
             sys.exit(1)
@@ -98,7 +108,7 @@ def main():
     if args.header:
         initializer.headers.update({
             args.header.split(":")[0]:
-            args.header.split(":")[1]
+                args.header.split(":")[1]
         })
 
     start = time.time()
@@ -132,7 +142,7 @@ def main():
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
-            except socket.gaierror as e :
+            except socket.gaierror as e:
                 msg = "Unable to resolve: " + scanner.url
                 report.error(msg)
                 msg = str(e)
@@ -156,7 +166,7 @@ def main():
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
-            except socket.gaierror as e :
+            except socket.gaierror as e:
                 msg = "Unable to resolve: " + scanner.url
                 report.error(msg)
                 msg = str(e)
@@ -176,7 +186,7 @@ def main():
             msg = "Unable to scan: " + scanner.url
             report.error(msg)
             report.error(str(e.reason))
-        except socket.gaierror as e :
+        except socket.gaierror as e:
             msg = "Unable to resolve: " + scanner.url
             report.error(msg)
             msg = str(e)

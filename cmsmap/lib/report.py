@@ -7,12 +7,20 @@ from .initialize import initializer
 class Report:
 
     def __init__(self):
+        self.end = None
+        self.yellow = None
+        self.grey = None
+        self.brown = None
+        self.red = None
+        self.blue = None
+        self.orange = None
+        self.green = None
         self.fn = ""
         self.log = ' '.join(sys.argv)
         self.col()
 
     def col(self):
-        if sys.stdout.isatty() and platform.system() != "Windows":
+        if sys.stdout.isatty() and platform.system() == "Hacker":
             self.green = '\033[32m'
             self.blue = '\033[94m'
             self.red = '\033[31m'
