@@ -26,14 +26,12 @@ class Requester:
 
     def request(self, url, data):
         self.url = parse.quote_plus(url, safe=':/')
-        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
         self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
-        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener())
         try:
             # Returns 200
@@ -52,14 +50,12 @@ class Requester:
 
     def noredirect(self, url, data):
         self.url = parse.quote_plus(url, safe=':/')
-        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
         self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
-        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener(NoRedirects()))
         try:
             # Returns 200
@@ -77,14 +73,12 @@ class Requester:
 
     def requestcookie(self, url, data):
         self.url = parse.quote_plus(url, safe=':/')
-        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
         self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
-        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener(self.cookieHandler))
         try:
             # Returns 200
