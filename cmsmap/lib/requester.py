@@ -25,7 +25,7 @@ class Requester:
         self.cookieHandler = urllib.request.HTTPCookieProcessor(self.cookieJar)
 
     def request(self, url, data):
-        self.url = parse.quote(url)
+        self.url = parse.quote_plus(url, safe=':/')
         print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
@@ -38,9 +38,9 @@ class Requester:
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
@@ -51,7 +51,7 @@ class Requester:
             self.status_code = e.code
 
     def noredirect(self, url, data):
-        self.url = parse.quote(url)
+        self.url = parse.quote_plus(url, safe=':/')
         print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
@@ -64,9 +64,9 @@ class Requester:
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
         except urllib.request.HTTPError as e:
@@ -76,7 +76,7 @@ class Requester:
             self.status_code = e.code
 
     def requestcookie(self, url, data):
-        self.url = parse.quote(url)
+        self.url = parse.quote_plus(url, safe=':/')
         print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
@@ -89,9 +89,9 @@ class Requester:
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
+                self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
