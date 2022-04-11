@@ -25,6 +25,7 @@ class Requester:
 
     def request(self, url, data):
         self.url = parse.quote(url)
+        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
@@ -49,6 +50,7 @@ class Requester:
 
     def noredirect(self, url, data):
         self.url = parse.quote(url)
+        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
@@ -72,6 +74,7 @@ class Requester:
 
     def requestcookie(self, url, data):
         self.url = parse.quote(url)
+        print("Request to URL:", self.url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
