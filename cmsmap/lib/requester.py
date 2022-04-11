@@ -2,6 +2,7 @@
 import http.cookiejar
 import ssl
 import urllib
+import urllib.request
 from urllib import parse
 
 # Import Objects
@@ -32,6 +33,7 @@ class Requester:
         if data:
             data = data.encode('utf-8')
         self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
+        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener())
         try:
             # Returns 200
@@ -57,13 +59,14 @@ class Requester:
         if data:
             data = data.encode('utf-8')
         self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
+        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener(NoRedirects()))
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(self.req, context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(self.req)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
         except urllib.request.HTTPError as e:
@@ -80,14 +83,15 @@ class Requester:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
-        self.req = parse.quote(urllib.request.Request(url=url, data=data, headers=self.headers))
+        self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
+        print("Req is:", self.req, '===', self.req.__dict__)
         urllib.request.install_opener(urllib.request.build_opener(self.cookieHandler))
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(self.req, context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(self.req)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
