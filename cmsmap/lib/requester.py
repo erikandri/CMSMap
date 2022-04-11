@@ -38,9 +38,9 @@ class Requester:
         try:
             # Returns 200
             if initializer.nosslcheck:
-                self.response = urllib.request.urlopen(self.req, context=self.ctx)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()), context=self.ctx)
             else:
-                self.response = urllib.request.urlopen(self.req)
+                self.response = urllib.request.urlopen(url=parse.quote(self.req.get_full_url()))
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
