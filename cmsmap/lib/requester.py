@@ -10,6 +10,10 @@ from .initialize import initializer
 
 class Requester:
     def __init__(self):
+        self.response = None
+        self.url = None
+        self.data = None
+        self.req = None
         self.htmltext = None
         self.status_code = None
         self.headers = initializer.headers
@@ -20,13 +24,13 @@ class Requester:
         self.cookieHandler = urllib.request.HTTPCookieProcessor(self.cookieJar)
 
     def request(self, url, data):
-        self.url = url
+        self.url = parse.quote(url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
-        self.req = parse.quote(urllib.request.Request(url=url, data=data, headers=self.headers))
+        self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
         urllib.request.install_opener(urllib.request.build_opener())
         try:
             # Returns 200
@@ -44,13 +48,13 @@ class Requester:
             self.status_code = e.code
 
     def noredirect(self, url, data):
-        self.url = url
+        self.url = parse.quote(url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
         if data:
             data = data.encode('utf-8')
-        self.req = parse.quote(urllib.request.Request(url=url, data=data, headers=self.headers))
+        self.req = urllib.request.Request(url=url, data=data, headers=self.headers)
         urllib.request.install_opener(urllib.request.build_opener(NoRedirects()))
         try:
             # Returns 200
@@ -67,7 +71,7 @@ class Requester:
             self.status_code = e.code
 
     def requestcookie(self, url, data):
-        self.url = url
+        self.url = parse.quote(url)
         self.data = data
         if type(data) is dict:
             data = urllib.parse.urlencode(data)
