@@ -23,8 +23,7 @@ class Initialize:
         self.threads = 5
         self.forceCMSmapUpdateType = None
         self.forceCMSmapUpdate = False
-        print("cmsmapPath:", self.cmsmapPath)
-        # self.weakpsw = [x.replace('\n', '') for x in open('../wordlist/rockyou.txt', 'r').readlines()]
+        self.weakpsw = [x.replace('\n', '') for x in open(os.path.join(self.cmsmapPath, 'wordlist/rockyou.txt'), 'r').readlines()]
         self.config = configparser.ConfigParser()
         self.config.read(os.path.join(self.cmsmapPath, "cmsmap.conf"))
         self.ParseConfigFile()
