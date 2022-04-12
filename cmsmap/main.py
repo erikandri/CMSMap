@@ -1,17 +1,24 @@
 #!/usr/bin/python3
-import os, sys, time, datetime, signal, socket, argparse, urllib
-
-from urllib.parse import urlparse
+import argparse
+import datetime
+import os
+import socket
+import sys
+import time
+import urllib
+import urllib.request
 from argparse import RawTextHelpFormatter
-from .version import __version__
-from .lib.initialize import initializer
+from urllib.parse import urlparse
+
 from .lib.bruteforcer import bruter
-from .lib.scanner import scanner
+from .lib.coreupdate import updater
 from .lib.exploitdbsearch import searcher
 from .lib.genericchecks import genericchecker
-from .lib.report import report
-from .lib.coreupdate import updater
+from .lib.initialize import initializer
 from .lib.postexploit import postexploiter
+from .lib.report import report
+from .lib.scanner import scanner
+from .version import __version__
 
 
 def main():

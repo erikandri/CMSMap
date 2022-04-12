@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
-import os, configparser
+import configparser
+import os
+
 
 class Initialize:
 
@@ -13,7 +15,7 @@ class Initialize:
         self.CrackingPasswords = False
         self.FullScan = False
         self.NoExploitdb = False
-        self.disableCleanURLs = False # https://www.drupal.org/docs/8/clean-urls-in-drupal-8
+        self.disableCleanURLs = False  # https://www.drupal.org/docs/8/clean-urls-in-drupal-8
         self.cmsmapPath = os.path.join(os.path.dirname(__file__), os.pardir)
         self.cmsmapPath = os.path.normpath(os.path.join(os.path.dirname(__file__), os.pardir))
         self.ospath = self.cmsmapPath
@@ -21,7 +23,7 @@ class Initialize:
         self.threads = 5
         self.forceCMSmapUpdateType = None
         self.forceCMSmapUpdate = False
-        self.weakpsw = ['password', 'admin', '123456', 'Password1']
+        self.weakpsw = [x.replace('\n', '') for x in open('../wordlist/rockyou.txt', 'r').readlines()]
         self.config = configparser.ConfigParser()
         self.config.read(os.path.join(self.cmsmapPath, "cmsmap.conf"))
         self.ParseConfigFile()
@@ -40,7 +42,7 @@ class Initialize:
         self.wp_plugins_small = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_plugins_small"))
         self.wp_themes_small = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_themes_small"))
         self.wp_themes = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_themes"))
-        self.wp_versions = os.path.join(self.cmsmapPath, self.config.get("wordpress","wp_versions"))
+        self.wp_versions = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_versions"))
         self.wp_timthumbs = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_timthumbs"))
         self.wp_defaultFiles = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_defaultFiles"))
         self.wp_defaultFolders = os.path.join(self.cmsmapPath, self.config.get("wordpress", "wp_defaultFolders"))
@@ -55,14 +57,14 @@ class Initialize:
         self.dru_plugins_small = os.path.join(self.cmsmapPath, self.config.get("drupal", "dru_plugins_small"))
         self.dru_defaultFiles = os.path.join(self.cmsmapPath, self.config.get("drupal", "dru_defaultFiles"))
         self.dru_defaultFolders = os.path.join(self.cmsmapPath, self.config.get("drupal", "dru_defaultFolders"))
-        self.dru_versions = os.path.join(self.cmsmapPath, self.config.get("drupal", "dru_versions")) 
+        self.dru_versions = os.path.join(self.cmsmapPath, self.config.get("drupal", "dru_versions"))
         # Moodle
-        #self.moo_plugins = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_plugins"))
-        #self.moo_plugins_small = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_plugins_small"))
+        # self.moo_plugins = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_plugins"))
+        # self.moo_plugins_small = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_plugins_small"))
         self.moo_defaultFiles = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_defaultFiles"))
         self.moo_defaultFolders = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_defaultFolders"))
         self.moo_versions = os.path.join(self.cmsmapPath, self.config.get("moodle", "moo_versions"))
-        
+
         # ExploitDB
         self.edbtype = self.config.get("exploitdb", "edbtype")
         self.edbpath = os.path.join(os.path.normpath(self.config.get("exploitdb", "edbpath")), "")

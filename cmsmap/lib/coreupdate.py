@@ -73,11 +73,13 @@ class CoreUpdate:
     # Run sort-uniq on the plugins files
     def SortUniqueFile(self):
         for list in [
-                initializer.wp_plugins, initializer.wp_plugins_small, initializer.wp_themes_small,initializer.wp_defaultFiles,initializer.wp_defaultFolders,
-                initializer.joo_plugins, initializer.joo_plugins_small, initializer.joo_defaultFiles, initializer.joo_defaultFolders,
-                initializer.dru_plugins, initializer.dru_plugins_small,
-                initializer.moo_defaultFiles, initializer.moo_defaultFolders
-                ]:
+            initializer.wp_plugins, initializer.wp_plugins_small, initializer.wp_themes_small,
+            initializer.wp_defaultFiles, initializer.wp_defaultFolders,
+            initializer.joo_plugins, initializer.joo_plugins_small, initializer.joo_defaultFiles,
+            initializer.joo_defaultFolders,
+            initializer.dru_plugins, initializer.dru_plugins_small,
+            initializer.moo_defaultFiles, initializer.moo_defaultFolders
+        ]:
             readlist = sorted(set([line.strip() for line in open(list)]))
             f = open(list, "w")
             for plugin in readlist:
@@ -91,7 +93,8 @@ class CoreUpdate:
             if os.path.exists(self.edbpath + ".git"):
                 p = subprocess.Popen("git -C " + self.edbpath + " remote update", stdout=subprocess.PIPE, shell=True)
                 p.communicate()
-                p = subprocess.Popen("git -C " + self.edbpath + " status -uno", stdout=subprocess.PIPE,shell=True, universal_newlines=True)
+                p = subprocess.Popen("git -C " + self.edbpath + " status -uno", stdout=subprocess.PIPE, shell=True,
+                                     universal_newlines=True)
                 output, error = p.communicate()
                 if re.search('behind', output):
                     msg = "ExploitDB and CMSmap plugins are not updated to the latest version"
@@ -155,7 +158,8 @@ class CoreUpdate:
                     initializer.config.set("exploitdb", "edbpath", self.edbpath)
                     if not os.path.exists(self.edbpath):
                         os.makedirs(self.edbpath)
-                    p = subprocess.Popen("git clone https://github.com/offensive-security/exploit-database" + self.edbpath,
+                    p = subprocess.Popen(
+                        "git clone https://github.com/offensive-security/exploit-database" + self.edbpath,
                         stdout=subprocess.PIPE,
                         shell=True)
                     p.communicate()
@@ -165,12 +169,13 @@ class CoreUpdate:
                             os.path.normpath(answer), "")
                         if not os.path.exists(self.edbpath):
                             os.makedirs(self.edbpath)
-                        p = subprocess.Popen("git clone https://github.com/offensive-security/exploit-database" + self.edbpath,
+                        p = subprocess.Popen(
+                            "git clone https://github.com/offensive-security/exploit-database" + self.edbpath,
                             stdout=subprocess.PIPE,
                             shell=True)
                         p.communicate()
-                with open(os.path.join(initializer.cmsmapPath, "cmsmap.conf"),'wr') as self.configFile:
-                    initializer.config.set("exploitdb", "edbpath",os.path.normpath(self.edbpath))
+                with open(os.path.join(initializer.cmsmapPath, "cmsmap.conf"), 'wr') as self.configFile:
+                    initializer.config.set("exploitdb", "edbpath", os.path.normpath(self.edbpath))
                     initializer.config.set("exploitdb", "edbtype", "git")
                     initializer.config.write(self.configFile)
                     self.UpdateCMSVersions()
@@ -186,14 +191,15 @@ class CoreUpdate:
     # Update CMS versions from remote Git repos
     def UpdateCMSVersions(self):
         local_versions = [('wordpress', initializer.wp_versions, 'tag | sort -rbVu'),
-                         ('joomla', initializer.joo_versions, 'tag | sort -rbVu | grep -vE "search|vPBF|11|12|13"'),
-                         ('drupal', initializer.dru_versions, 'tag | sort -rbVu | grep -v start'),
-                         ('moodle', initializer.moo_versions, 'tag | sort -rbVu')]
-        
-        for cms_type, cms_file, sorted_versions in local_versions :
-            msg = "Updating "+cms_type+" versions"
+                          ('joomla', initializer.joo_versions, 'tag | sort -rbVu | grep -vE "search|vPBF|11|12|13"'),
+                          ('drupal', initializer.dru_versions, 'tag | sort -rbVu | grep -v start'),
+                          ('moodle', initializer.moo_versions, 'tag | sort -rbVu')]
+
+        for cms_type, cms_file, sorted_versions in local_versions:
+            msg = "Updating " + cms_type + " versions"
             report.message(msg)
-            p = subprocess.Popen("git -C "+self.cmsmapPath+"/tmp/"+cms_type+" "+sorted_versions,stdout=subprocess.PIPE,shell=True, universal_newlines=True)
+            p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/" + cms_type + " " + sorted_versions,
+                                 stdout=subprocess.PIPE, shell=True, universal_newlines=True)
             output, error = p.communicate()
             f = open(cms_file, "w")
             f.write(output)
@@ -201,12 +207,12 @@ class CoreUpdate:
 
     # If *_plugins_smalls.txt, *_versions.txt, *_defaultfiles.txt, defaultfolders.txt do not exist, generate them
     def CheckLocalFiles(self):
-        for file_plugin_small in [initializer.wp_plugins_small, 
+        for file_plugin_small in [initializer.wp_plugins_small,
                                   initializer.joo_plugins_small,
                                   initializer.dru_plugins_small]:
             if not os.path.isfile(file_plugin_small):
                 self.UpdateLocalPlugins()
-        for file_version in [initializer.wp_versions, 
+        for file_version in [initializer.wp_versions,
                              initializer.joo_versions,
                              initializer.dru_versions,
                              initializer.moo_versions]:
@@ -220,29 +226,29 @@ class CoreUpdate:
                              initializer.dru_defaultFiles,
                              initializer.dru_defaultFolders,
                              initializer.moo_defaultFiles,
-                             initializer.moo_defaultFolders]:                            
+                             initializer.moo_defaultFolders]:
             if not os.path.isfile(file_default):
                 self.UpdateDefaultFiles()
         self.SortUniqueFile()
 
     # Update Plugins from local exploit-db
     def UpdateLocalPlugins(self):
-        local_plugins = [('wordpress', 
-                          "grep -iREho wp-content/plugins/\(.+?\)/ "+self.edbpath+
+        local_plugins = [('wordpress',
+                          "grep -iREho wp-content/plugins/\(.+?\)/ " + self.edbpath +
                           "/exploits/php | cut -d '/' -f 3 | sort -u | tail -n+3",
                           initializer.wp_plugins_small),
                          ('joomla',
-                          "grep -iREho \?option=\(com_\\w*\)\& "+self.edbpath+
+                          "grep -iREho \?option=\(com_\\w*\)\& " + self.edbpath +
                           "/exploits/ | cut -d '&' -f 1 | cut -d '=' -f 2 | sort -u ",
                           initializer.joo_plugins_small),
                          ('drupal',
-                           "grep -iREho \/components\/\(com_\\w*\)\/ "+self.edbpath+
-                           "/exploits/ | cut -d '/' -f 3 |  cut -d'.' -f1 | sort -u",
-                           initializer.dru_plugins_small)]
-        for cms_type, grep_cmd, cms_small_plugin_path in local_plugins :
-            msg = "Updating "+cms_type+" small plugins"
+                          "grep -iREho \/components\/\(com_\\w*\)\/ " + self.edbpath +
+                          "/exploits/ | cut -d '/' -f 3 |  cut -d'.' -f1 | sort -u",
+                          initializer.dru_plugins_small)]
+        for cms_type, grep_cmd, cms_small_plugin_path in local_plugins:
+            msg = "Updating " + cms_type + " small plugins"
             report.message(msg)
-            p = subprocess.Popen(grep_cmd,stdout=subprocess.PIPE,shell=True, universal_newlines=True)
+            p = subprocess.Popen(grep_cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
             output, error = p.communicate()
             f = open(cms_small_plugin_path, "a")
             f.write(output)
@@ -252,50 +258,54 @@ class CoreUpdate:
     def UpdateTmpCMS(self):
         msg = "Update CMSs in tmp folder"
         report.verbose(msg)
-        git_repos = {'wordpress':'https://github.com/wordpress/wordpress',
-                    'joomla': 'https://github.com/joomla/joomla-cms',
-                    'drupal': 'https://github.com/drupal/drupal',
-                    'moodle':'https://github.com/moodle/moodle'}
-        for repo_key , repo_value in git_repos.items() :
+        git_repos = {'wordpress': 'https://github.com/wordpress/wordpress',
+                     'joomla': 'https://github.com/joomla/joomla-cms',
+                     'drupal': 'https://github.com/drupal/drupal',
+                     'moodle': 'https://github.com/moodle/moodle'}
+        for repo_key, repo_value in git_repos.items():
             if not os.path.exists(self.cmsmapPath + "/tmp/" + repo_key + "/.git"):
-                msg = repo_key +" git repo has not been found. Cloning..."
+                msg = repo_key + " git repo has not been found. Cloning..."
                 report.message(msg)
-                p = subprocess.Popen("git clone "+repo_value+" " + self.cmsmapPath+"/tmp/"+repo_key,
-                    stdout=subprocess.PIPE,
-                    shell=True, universal_newlines=True)
+                p = subprocess.Popen("git clone " + repo_value + " " + self.cmsmapPath + "/tmp/" + repo_key,
+                                     stdout=subprocess.PIPE,
+                                     shell=True, universal_newlines=True)
                 p.communicate()
             else:
-                p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/"+repo_key+" remote update", stdout=subprocess.PIPE, shell=True)
+                p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/" + repo_key + " remote update",
+                                     stdout=subprocess.PIPE, shell=True)
                 p.communicate()
-                p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/"+repo_key+" status -uno", stdout=subprocess.PIPE, shell=True, 
+                p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/" + repo_key + " status -uno",
+                                     stdout=subprocess.PIPE, shell=True,
                                      universal_newlines=True)
                 output, error = p.communicate()
                 if re.search('behind', output):
-                    process = os.system("git -C " + self.cmsmapPath + "/tmp/"+repo_key+" pull")        
-                
+                    process = os.system("git -C " + self.cmsmapPath + "/tmp/" + repo_key + " pull")
 
-    # Update default files and folder from the local GIT repos of CMSs
-    def UpdateDefaultFiles(self): 
+                    # Update default files and folder from the local GIT repos of CMSs
+
+    def UpdateDefaultFiles(self):
         default_files = [('wordpress', initializer.wp_defaultFiles, initializer.wp_defaultFolders),
-                         ('joomla',initializer.joo_defaultFiles, initializer.joo_defaultFolders),
-                         ('drupal',initializer.dru_defaultFiles, initializer.dru_defaultFolders),
-                         ('moodle',initializer.moo_defaultFiles, initializer.moo_defaultFolders)]
-        for cms_type,defaultFiles,defaultFolders in default_files :
-            msg = "Updating "+cms_type+" default files"
+                         ('joomla', initializer.joo_defaultFiles, initializer.joo_defaultFolders),
+                         ('drupal', initializer.dru_defaultFiles, initializer.dru_defaultFolders),
+                         ('moodle', initializer.moo_defaultFiles, initializer.moo_defaultFolders)]
+        for cms_type, defaultFiles, defaultFolders in default_files:
+            msg = "Updating " + cms_type + " default files"
             report.message(msg)
-            p = subprocess.Popen("find "+self.cmsmapPath+
-                                 "/tmp/"+cms_type+" -type f -name '*.txt' -o -name '*.html' -o -name '*.sql'| sed 's|"+self.cmsmapPath+
-                                 "/tmp/"+cms_type+"||g'",stdout=subprocess.PIPE,shell=True, universal_newlines=True)
+            p = subprocess.Popen("find " + self.cmsmapPath +
+                                 "/tmp/" + cms_type + " -type f -name '*.txt' -o -name '*.html' -o -name '*.sql'| sed 's|" + self.cmsmapPath +
+                                 "/tmp/" + cms_type + "||g'", stdout=subprocess.PIPE, shell=True,
+                                 universal_newlines=True)
             output, error = p.communicate()
             f = open(defaultFiles, "a")
             f.write(output)
             f.close()
 
-            msg = "Updating "+cms_type+" default folders"
+            msg = "Updating " + cms_type + " default folders"
             report.message(msg)
-            p = subprocess.Popen("find "+self.cmsmapPath+
-                                 "/tmp/"+cms_type+" -maxdepth 2 -type d | sed 's|"+self.cmsmapPath+
-                                 "/tmp/"+cms_type+"||g'",stdout=subprocess.PIPE,shell=True, universal_newlines=True)
+            p = subprocess.Popen("find " + self.cmsmapPath +
+                                 "/tmp/" + cms_type + " -maxdepth 2 -type d | sed 's|" + self.cmsmapPath +
+                                 "/tmp/" + cms_type + "||g'", stdout=subprocess.PIPE, shell=True,
+                                 universal_newlines=True)
             output, error = p.communicate()
             f = open(defaultFolders, "a")
             f.write(output)
