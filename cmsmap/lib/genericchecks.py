@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
 import sys, re, time, queue
 
-#Import Object
+# Import Object
 from urllib.parse import urlparse
 from .initialize import initializer
 from .report import report
 from .requester import requester
 
-#Import Class
+# Import Class
 from .threadscanner import ThreadScanner
 
 
@@ -46,10 +46,10 @@ class GenericChecks:
         report.verbose(msg)
         requester.request(self.url + self.relPath, data=None)
         dirList = re.search("<title>Index of", requester.htmltext, re.IGNORECASE)
-        if dirList: 
+        if dirList:
             msg = self.url + self.relPath
             report.low(msg)
-        
+
     # Check if website is over HTTPS
     def HTTPSCheck(self):
         msg = "Checking if the website is in HTTPS ..."
@@ -59,7 +59,7 @@ class GenericChecks:
         if scheme == 'http':
             # check HTTPS redirection
             requester.noredirect(self.url, data=None)
-            if requester.status_code == 200 :
+            if requester.status_code == 200:
                 msg = "Website Not in HTTPS: " + self.url
                 report.medium(msg)
             else:
@@ -98,18 +98,18 @@ class GenericChecks:
         if not requester.response.info().get('x-content-type-options'):
             msg = "X-Content-Type-Options: Not Enforced"
             report.info(msg)
-        
+
     # Check if AutoComplete is set to Off on login pages
     def AutocompleteOff(self, relPath):
         msg = "Checking Autocomplete Off on the login page ..."
         report.verbose(msg)
         self.relPath = relPath
         requester.request(self.url + self.relPath, data=None)
-        autoComp = re.search("autocomplete=\"off\"", requester.htmltext,re.IGNORECASE)
+        autoComp = re.search("autocomplete=\"off\"", requester.htmltext, re.IGNORECASE)
         if not autoComp:
             msg = "Autocomplete Off Not Found: " + self.url + self.relPath
             report.info(msg)
-        
+
     # Check if robots.txt is available
     def RobotsTXT(self):
         msg = "Checking Robots.txt File ..."
@@ -121,7 +121,6 @@ class GenericChecks:
         else:
             msg = "No Robots.txt Found"
             report.low(msg)
-            
 
     # Extract error codes and page length from a not existing web page
     def NotExistingURL(self):
@@ -151,15 +150,17 @@ class GenericChecks:
             # Add all plugins to the queue
             for commFilesIndex, file in enumerate(self.commFiles):
                 q.put(file + ext)
-                sys.stdout.write("\r" + str((100 * ((len(self.commFiles) * extIndex) + commFilesIndex) / 
-                                (len(self.commFiles) * len(self.commExt)))) + "% " + file +  ext + "            ")
-                sys.stdout.flush()
+                # sys.stdout.write("\r" + str((100 * ((len(self.commFiles) * extIndex) + commFilesIndex) /
+                #                              (len(self.commFiles) * len(
+                #                                  self.commExt)))) + "% " + file + ext + "            ")
+                # sys.stdout.flush()
             q.join()
-            sys.stdout.write("\r")
-            sys.stdout.flush()
+            # sys.stdout.write("\r")
+            # sys.stdout.flush()
 
         for file in self.interFiles:
             msg = self.url + "/" + file
             report.low(msg)
+
 
 genericchecker = GenericChecks()

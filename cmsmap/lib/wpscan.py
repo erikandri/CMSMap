@@ -1,20 +1,29 @@
 #! /usr/bin/env python3
-import sys, re, queue, time
+import queue
+import re
+import sys
+import time
 
+from .bruteforcer import bruter
+from .exploitdbsearch import searcher
+from .genericchecks import genericchecker
 # Import Object
 from .initialize import initializer
 from .report import report
-from .exploitdbsearch import searcher
-from .bruteforcer import bruter
-from .genericchecks import genericchecker
 from .requester import requester
-
 # Import Class
 from .threadscanner import ThreadScanner
+
 
 class WPScan:
     # Scan WordPress site
     def __init__(self):
+        self.pluginsFoundVers = None
+        self.postdata = None
+        self.defaultFolders = None
+        self.defaultFiles = None
+        self.versions = None
+        self.plugins_small = None
         self.url = None
         self.currentVer = None
         self.latestVer = None
@@ -53,7 +62,8 @@ class WPScan:
         bruter.pswlist = initializer.weakpsw
         self.WPXMLRPC_check()
         if self.XMLRPCEnable:
-            if bruter.dictattack is not None: bruter.WPXMLRPC_brute()
+            if bruter.dictattack is not None:
+                bruter.WPXMLRPC_brute()
             self.WPXMLRPC_pingback()
             self.WPXMLRPC_BF()
         elif bruter.dictattack is not None:
@@ -61,13 +71,15 @@ class WPScan:
         self.WPForgottenPassword()
         genericchecker.AutocompleteOff('/wp-login.php')
         self.WPDefaultFiles()
-        if initializer.FullScan: genericchecker.CommonFiles()
+        if initializer.FullScan:
+            genericchecker.CommonFiles()
         self.WPpluginsIndex()
         self.WPplugins()
         self.WPpluginsVersion()
         searcher.query = self.pluginsFound
         searcher.OfflinePlugins()
-        if initializer.FullScan: self.WPTimThumbs()
+        if initializer.FullScan:
+            self.WPTimThumbs()
         self.WPDirsListing()
 
     # Grab the small plugins, versions and default files generated at run time
@@ -89,8 +101,9 @@ class WPScan:
             msg = "Wordpress Version: " + self.currentVer[0]
             report.info(msg)
         else:
-            requester.request(self.url, data=None)           
-            self.currentVer = re.findall('<meta name="generator" content="WordPress (\d+\.\d+[\.\d+]*)"', requester.htmltext)
+            requester.request(self.url, data=None)
+            self.currentVer = re.findall('<meta name="generator" content="WordPress (\d+\.\d+[\.\d+]*)"',
+                                         requester.htmltext)
             if self.currentVer:
                 msg = "Wordpress Version: " + self.currentVer[0]
                 report.info(msg)
@@ -146,9 +159,9 @@ class WPScan:
     def WPFeed(self):
         msg = "Enumerating Wordpress usernames via \"Feed\" ..."
         report.verbose(msg)
-        requester.request(self.url + self.feed, data=None) 
+        requester.request(self.url + self.feed, data=None)
         wpUsers = re.findall("<dc:creator>[<!\[CDATA\[]*(.+?)[\]\]>]*</dc:creator>",
-            requester.htmltext)
+                             requester.htmltext)
         if wpUsers:
             self.usernames = wpUsers + self.usernames
             self.usernames = sorted(set(self.usernames))
@@ -160,9 +173,11 @@ class WPScan:
         for user in range(1, 50):
             requester.request(self.url + self.author + str(user), data=None)
             wpUser = re.findall("author author-(.+?) ", requester.htmltext, re.IGNORECASE)
-            if wpUser: self.usernames = wpUser + self.usernames
+            if wpUser:
+                self.usernames = wpUser + self.usernames
             wpUser = re.findall("Posts by (.+?) Feed", requester.htmltext, re.IGNORECASE)
-            if wpUser: self.usernames = wpUser + self.usernames
+            if wpUser:
+                self.usernames = wpUser + self.usernames
         self.usernames = sorted(set(self.usernames))
         # if users are found, print them (it includes the users found by WPFeed)
         if self.usernames:
@@ -178,20 +193,21 @@ class WPScan:
         report.verbose(msg)
         # Use an invalid, not-existing, not-registered user
         self.postdata = {"user_login": "N0t3xist!1234"}
-        requester.request(self.url + self.forgottenPsw, data=self.postdata)  
+        requester.request(self.url + self.forgottenPsw, data=self.postdata)
         if re.findall(re.compile('Invalid username'), requester.htmltext):
             msg = "Forgotten Password Allows Username Enumeration: " + self.url + self.forgottenPsw
             report.info(msg)
 
     # Find full path via the default hello plugin
     def WPHello(self):
-        requester.request(self.url + "/wp-content/plugins/hello.php", data=None) 
+        requester.request(self.url + "/wp-content/plugins/hello.php", data=None)
         fullPath = re.findall(re.compile('Fatal error.*>/(.+?/)hello.php'), requester.htmltext)
         if fullPath:
             msg = "Wordpress Hello Plugin Full Path Disclosure: " + "/" + fullPath[0] + "hello.php"
-            report.low(msg)        
+            report.low(msg)
 
-    # Find directory listing in default directories and plugin directories
+            # Find directory listing in default directories and plugin directories
+
     def WPDirsListing(self):
         msg = "Checking for Directory Listing Enabled ..."
         report.info(msg)
@@ -207,30 +223,32 @@ class WPScan:
     def WPpluginsIndex(self):
         msg = "Checking WordPress plugins in the index page"
         report.verbose(msg)
-        requester.request(self.url, data=None) 
+        requester.request(self.url, data=None)
         self.pluginsFound = re.findall(re.compile('/wp-content/plugins/(.+?)/'), requester.htmltext)
 
     # Find plugins via a dictionary attack
     def WPplugins(self):
         msg = "Searching Wordpress Plugins ..."
         report.message(msg)
-        if not initializer.FullScan: self.plugins = self.plugins_small
+        if not initializer.FullScan:
+            self.plugins = self.plugins_small
         # Create Code
         q = queue.Queue()
         # Spawn all threads into code
         for u in range(initializer.threads):
-            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen, q)
+            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen,
+                              q)
             t.daemon = True
             t.start()
         # Add all plugins to the queue
         for i in self.plugins:
             q.put(i)
-        while not q.empty() :
-            sys.stdout.write("\r"+str(int((len(self.plugins) - q.qsize()) * 1.0 / len(self.plugins) * 100)) + "%")
-            sys.stdout.flush()
+        while not q.empty():
+            # sys.stdout.write("\r" + str(int((len(self.plugins) - q.qsize()) * 1.0 / len(self.plugins) * 100)) + "%")
+            # sys.stdout.flush()
             time.sleep(1)
         q.join()
-        sys.stdout.write("\r")
+        # sys.stdout.write("\r")
         self.pluginsFound = sorted(set(self.pluginsFound))
 
     # self.pluginsFound are now a dictionary {"plugin_name":"plugin_version"}
@@ -238,10 +256,10 @@ class WPScan:
     def WPpluginsVersion(self):
         self.pluginsFoundVers = {}
         for pluginFound in self.pluginsFound:
-            requester.request(self.url+self.pluginPath+pluginFound+"/readme.txt", data=None)
+            requester.request(self.url + self.pluginPath + pluginFound + "/readme.txt", data=None)
             pluginVer = re.findall('Stable tag: (\d+\.\d+[\.\d+]*)', requester.htmltext)
             # Add plugin version
-            if pluginVer : 
+            if pluginVer:
                 self.pluginsFoundVers[pluginFound] = pluginVer[0]
             else:
                 # Match has not been found
@@ -263,7 +281,7 @@ class WPScan:
         for r, i in enumerate(self.timthumbs):
             q.put(i)
         q.join()
-        sys.stdout.write("\r")
+        # sys.stdout.write("\r")
         if self.timthumbsFound:
             for timthumbsFound in self.timthumbsFound:
                 msg = self.url + "/" + timthumbsFound
@@ -275,21 +293,23 @@ class WPScan:
     def WPThemes(self):
         msg = "Searching Wordpress Themes ..."
         report.message(msg)
-        if not initializer.FullScan: self.themes = self.themes_small
+        if not initializer.FullScan:
+            self.themes = self.themes_small
         # Create Code
         q = queue.Queue()
         # Spawn all threads into code
         for u in range(initializer.threads):
-            t = ThreadScanner(self.url, self.themePath, "/", self.themesFound, self.notExistingCode, self.notValidLen, q)
+            t = ThreadScanner(self.url, self.themePath, "/", self.themesFound, self.notExistingCode, self.notValidLen,
+                              q)
             t.daemon = True
             t.start()
         # Add all theme to the queue
         for r, i in enumerate(self.themes):
             q.put(i)
-            sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.themes)) + "%")
-            sys.stdout.flush()
+            # sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.themes)) + "%")
+            # sys.stdout.flush()
         q.join()
-        sys.stdout.write("\r")
+        # sys.stdout.write("\r")
         for themesFound in self.themesFound:
             msg = themesFound
             report.info(msg)
@@ -302,7 +322,7 @@ class WPScan:
                         <param><value><string>ThisIsATest</string></value></param>
                         <param><value><string>ThisIsATest</string></value></param></params></methodCall>
                         '''
-        requester.request(self.url + '/xmlrpc.php', data = self.postdata)
+        requester.request(self.url + '/xmlrpc.php', data=self.postdata)
         if re.search('<value><string>XML-RPC services are disabled', requester.htmltext):
             msg = "XML-RPC services are disabled"
             report.verbose(msg)
@@ -319,7 +339,7 @@ class WPScan:
                         <param><value><string>http://N0tB3th3re0484940:22/</string></value></param>
                         <param><value><string>''' + self.url + '''</string></value></param>
                         </params></methodCall>'''
-        requester.request(self.url + '/xmlrpc.php', data = self.postdata)
+        requester.request(self.url + '/xmlrpc.php', data=self.postdata)
         if re.search('<name>16</name>', requester.htmltext):
             msg = "Website vulnerable to XML-RPC Pingback Force Vulnerability"
             report.low(msg)
@@ -332,7 +352,7 @@ class WPScan:
                         <param><value><string>admin</string></value></param>
                         <param><value><string></string></value></param>
                         </params></methodCall>'''
-        requester.request(self.url + '/xmlrpc.php', data = self.postdata)
+        requester.request(self.url + '/xmlrpc.php', data=self.postdata)
         if re.search('<int>403</int>', requester.htmltext):
             msg = "Website vulnerable to XML-RPC Brute Force Vulnerability"
             report.medium(msg)
@@ -340,5 +360,6 @@ class WPScan:
                 if self.currentVer[0] < '4.4':
                     msg = "Website vulnerable to XML-RPC Amplification Brute Force Vulnerability"
                     report.medium(msg)
+
 
 wpscan = WPScan()

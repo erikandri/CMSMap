@@ -9,7 +9,6 @@ from .genericchecks import genericchecker
 from .bruteforcer import bruter
 from .requester import requester
 
-
 # Import Class
 from .threadscanner import ThreadScanner
 
@@ -26,7 +25,7 @@ class MooScan:
         self.notExistingCode = 404
         self.confFiles = [line.strip() for line in open(initializer.confFiles)]
         # No plugins for moodle
-        #self.plugins = [line.strip() for line in open(initializer.moo_plugins)]
+        # self.plugins = [line.strip() for line in open(initializer.moo_plugins)]
 
     # Moodle checks
     def Moorun(self):
@@ -39,7 +38,7 @@ class MooScan:
         self.MooDefaultFiles()
         self.MooVersion()
         self.MooDirsListing()
-    
+
     # Grab the versions and default files generated at run time
     def MooGetLocalFiles(self):
         self.versions = [line.strip() for line in open(initializer.moo_versions)]
@@ -72,65 +71,68 @@ class MooScan:
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
                     requester.request(self.url + file, data=None)
-                    sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
-                    sys.stdout.flush()
+                    # sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
+                    # sys.stdout.flush()
                     if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(file)
-                sys.stdout.write("\r")
+                # sys.stdout.write("\r")
                 for file in self.defFilesFound:
                     msg = self.url + file
                     report.info(msg)
-    
+
     # Find Moodle version 
     def MooVersion(self):
         # Check if self.defFilesFound is not empty
-        if self.defFilesFound :
+        if self.defFilesFound:
             defFileHashes = {}
             top3 = 0
             top3versions = []
             firstmatch = False
             # Create list of Moodle versions {('version': hash_value)}
-            for defFile in self.defFilesFound :
+            for defFile in self.defFilesFound:
                 requester.request(self.url + defFile, data=None)
                 hash_object = hashlib.sha256(requester.htmltext.encode('utf-8'))
                 hash_digest = hash_object.hexdigest()
-                defFileHashes[defFile]=hash_digest
+                defFileHashes[defFile] = hash_digest
             msg = "Checking Moodle version ..."
             report.verbose(msg)
             FNULL = open(os.devnull, 'w')
-            p = subprocess.Popen("git -C "+ initializer.cmsmapPath+"/tmp/moodle checkout master -f", stdout=FNULL, stderr=FNULL, shell=True)
+            p = subprocess.Popen("git -C " + initializer.cmsmapPath + "/tmp/moodle checkout master -f", stdout=FNULL,
+                                 stderr=FNULL, shell=True)
             p.communicate()
             # Compare discovered default files with default files against each version of Moodle
-            for mver in self.versions :
-                msg = "Checking version: "+ mver
+            for mver in self.versions:
+                msg = "Checking version: " + mver
                 report.verbose(msg)
                 matches = 0
-                p = subprocess.Popen("git -C "+ initializer.cmsmapPath+"/tmp/moodle checkout tags/"+mver, stdout=FNULL, stderr=FNULL, shell=True)
+                p = subprocess.Popen("git -C " + initializer.cmsmapPath + "/tmp/moodle checkout tags/" + mver,
+                                     stdout=FNULL, stderr=FNULL, shell=True)
                 p.communicate()
-                for defFile, defFileHash in defFileHashes.items() :
-                    filepath = initializer.cmsmapPath+"/tmp/moodle"+defFile
+                for defFile, defFileHash in defFileHashes.items():
+                    filepath = initializer.cmsmapPath + "/tmp/moodle" + defFile
                     if os.path.isfile(filepath):
                         f = open(filepath, "rb")
                         hash_object = hashlib.sha256(f.read())
                         hash_digest = hash_object.hexdigest()
-                    if hash_digest == defFileHash :
+                    if hash_digest == defFileHash:
                         matches = matches + 1
                 # Margin error of 1 file
-                if matches >= (len(defFileHashes)-1) :
-                    top3versions.append((mver,matches))
+                if matches >= (len(defFileHashes) - 1):
+                    top3versions.append((mver, matches))
                     firstmatch = True
-                if firstmatch :
+                if firstmatch:
                     top3 = top3 + 1
-                    if top3 == 3 : 
+                    if top3 == 3:
                         top3versions = sorted(top3versions, key=lambda ver: ver[1], reverse=True)
                         msg = "Detected version of Moodle appears to be: "
                         report.info(msg)
-                        for moodle_vers in top3versions :
+                        for moodle_vers in top3versions:
                             msg = str(moodle_vers[0])
                             report.info(msg)
                         break
 
-            p = subprocess.Popen("git -C "+ initializer.cmsmapPath+"/tmp/moodle checkout master -f", stdout=FNULL, stderr=FNULL, shell=True, universal_newlines=True)
+            p = subprocess.Popen("git -C " + initializer.cmsmapPath + "/tmp/moodle checkout master -f", stdout=FNULL,
+                                 stderr=FNULL, shell=True, universal_newlines=True)
             output, error = p.communicate()
 
     # Find directory listing in default directories and components directories
@@ -140,5 +142,6 @@ class MooScan:
         report.WriteTextFile(msg)
         for folder in self.defaultFolders:
             genericchecker.DirectoryListing(folder)
+
 
 mooscan = MooScan()

@@ -16,6 +16,19 @@ from .threadscanner import ThreadScanner
 class DruScan:
     # Scan Drupal site
     def __init__(self):
+        self.pluginsFoundVers = None
+        self.postdata = None
+        self.forgottenPsw = None
+        self.quser = None
+        self.blog = None
+        self.alphanum = None
+        self.views = None
+        self.defFilesFound = None
+        self.Drutheme = None
+        self.defaultFolders = None
+        self.defaultFiles = None
+        self.versions = None
+        self.plugins_small = None
         self.url = None
         self.notExistingCode = 404
         self.notValidLen = []
@@ -43,7 +56,8 @@ class DruScan:
         if bruter.dictattack is not None: bruter.Drurun()
         genericchecker.AutocompleteOff(self.quser)
         self.DruDefaultFiles()
-        if initializer.FullScan: genericchecker.CommonFiles()
+        if initializer.FullScan:
+            genericchecker.CommonFiles()
         self.DruForgottenPassword()
         self.DruModulesIndex()
         self.DruModules()
@@ -96,7 +110,7 @@ class DruScan:
         report.verbose(msg)
         for file in self.confFiles:
             requester.request(self.url + "/sites/default/settings" + file, data=None)
-            if requester.status_code  == 200 and len(requester.htmltext) not in self.notValidLen:
+            if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                 msg = "Configuration File Found: " + self.url + "/sites/default/settings" + file
                 report.high(msg)
 
@@ -116,11 +130,11 @@ class DruScan:
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
                     requester.request(self.url + file, data=None)
-                    sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
-                    sys.stdout.flush()
+                    # sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
+                    # sys.stdout.flush()
                     if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(self.url + file)
-                sys.stdout.write("\r")
+                # sys.stdout.write("\r")
                 for file in self.defFilesFound:
                     msg = file
                     report.info(msg)
@@ -128,13 +142,13 @@ class DruScan:
     # Find Drupal users via the View Module
     def DruViews(self):
         self.views = "/?q=admin/views/ajax/autocomplete/user/"
-        if not initializer.disableCleanURLs :
-            self.views = self.views.replace("?q=","")
+        if not initializer.disableCleanURLs:
+            self.views = self.views.replace("?q=", "")
         self.alphanum = list("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         msg = "Enumerating Drupal Usernames via \"Views\" Module..."
         report.message(msg)
-        requester.noredirect(self.url + "/?q=admin/views/ajax/autocomplete/user/NotExisingUser1234!", data=None) 
-        #If NotExisingUser1234 returns [], then enumerate users
+        requester.noredirect(self.url + "/?q=admin/views/ajax/autocomplete/user/NotExisingUser1234!", data=None)
+        # If NotExisingUser1234 returns [], then enumerate users
         if requester.htmltext == '[]':
             msg = "\"Views\" Module vulnerable to user enumeration"
             report.medium(msg)
@@ -151,10 +165,10 @@ class DruScan:
     # Find Drupal users checking the first 50 authors blogs
     def DruBlog(self):
         self.blog = "/?q=blog/"
-        if not initializer.disableCleanURLs :
-            self.blog = self.blog.replace("?q=","")
+        if not initializer.disableCleanURLs:
+            self.blog = self.blog.replace("?q=", "")
         requester.request(self.url + self.blog, data=None)
-        if requester.status_code == 200: 
+        if requester.status_code == 200:
             msg = "Enumerating Drupal Usernames via \"Blog\" Module..."
             report.message(msg)
             for blognum in range(1, 50):
@@ -170,9 +184,9 @@ class DruScan:
 
     def DruQUser(self):
         self.quser = "/?q=user/"
-        if not initializer.disableCleanURLs :
-            self.quser = self.quser.replace("?q=","")
-        msg = "Enumerating Drupal Usernames via \""+self.quser+"\"..."
+        if not initializer.disableCleanURLs:
+            self.quser = self.quser.replace("?q=", "")
+        msg = "Enumerating Drupal Usernames via \"" + self.quser + "\"..."
         report.message(msg)
         for usernum in range(1, 50):
             requester.request(self.url + self.quser + str(usernum), data=None)
@@ -188,15 +202,15 @@ class DruScan:
     # Check if it is possible to enumerate users via Forgotten password functionality
     def DruForgottenPassword(self):
         self.forgottenPsw = "/?q=user/password"
-        if not initializer.disableCleanURLs :
-            self.forgottenPsw = self.forgottenPsw.replace("?q=","")
+        if not initializer.disableCleanURLs:
+            self.forgottenPsw = self.forgottenPsw.replace("?q=", "")
         msg = "Checking Drupal forgotten password ..."
         report.verbose(msg)
         # Username Enumeration via Forgotten Password
         self.postdata = {"name": "N0t3xist!1234", "form_id": "user_pass"}
         # HTTP POST Request
         requester.request(self.url + self.forgottenPsw, data=self.postdata)
-        #print "[*] Trying Credentials: "+user+" "+pwd
+        # print "[*] Trying Credentials: "+user+" "+pwd
         if re.findall(re.compile('Sorry,.*N0t3xist!1234.*is not recognized'), requester.htmltext):
             msg = "Forgotten Password Allows Username Enumeration: " + self.url + self.forgottenPsw
             report.info(msg)
@@ -228,25 +242,28 @@ class DruScan:
         for pluginFound in self.pluginsFound:
             self.pluginsFoundVers[pluginFound] = None
         self.pluginsFound = self.pluginsFoundVers
-    
+
     # Find modules via dictionary attack
     def DruModules(self):
         msg = "Search Drupal Modules ..."
         report.message(msg)
-        if not initializer.FullScan: self.plugins = self.plugins_small
+        if not initializer.FullScan:
+            self.plugins = self.plugins_small
         # Create Code
         q = queue.Queue()
         # Spawn all threads into code
         for u in range(initializer.threads):
-            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen, q)
+            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen,
+                              q)
             t.daemon = True
             t.start()
         # Add all plugins to the queue
         for r, i in enumerate(self.plugins):
             q.put(i)
-            sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.plugins)) + "%")
-            sys.stdout.flush()
+            # sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.plugins)) + "%")
+            # sys.stdout.flush()
         q.join()
-        sys.stdout.write("\r")
+        # sys.stdout.write("\r")
+
 
 druscan = DruScan()

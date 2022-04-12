@@ -83,7 +83,7 @@ class JooScan:
         msg = "Checking Joomla template ..."
         report.verbose(msg)
         requester.request(self.url + '/index.php', data=None)
-        WebTemplates = re.findall("/templates/(.+?)/", requester.htmltext,re.IGNORECASE)
+        WebTemplates = re.findall("/templates/(.+?)/", requester.htmltext, re.IGNORECASE)
         WebTemplates = sorted(set(WebTemplates))
         requester.request(self.url + '/administrator/index.php', data=None)
         AdminTemplates = re.findall("/administrator/templates/(.+?)/", requester.htmltext, re.IGNORECASE)
@@ -127,11 +127,11 @@ class JooScan:
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
                     requester.request(self.url + file, data=None)
-                    sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
-                    sys.stdout.flush()
+                    # sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
+                    # sys.stdout.flush()
                     if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(self.url + file)
-                sys.stdout.write("\r")
+                # sys.stdout.write("\r")
                 for file in self.defFilesFound:
                     msg = file
                     report.info(msg)
@@ -185,18 +185,19 @@ class JooScan:
         q = queue.Queue()
         # Spawn all threads into code
         for u in range(initializer.threads):
-            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen, q)
+            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen,
+                              q)
             t.daemon = True
             t.start()
         # Add all plugins to the queue
         for r, i in enumerate(self.plugins):
             q.put(i)
-        while not q.empty() :
-            sys.stdout.write("\r"+str(int((len(self.plugins) - q.qsize()) * 100 / len(self.plugins))) + "%")
-            sys.stdout.flush()
+        while not q.empty():
+            # sys.stdout.write("\r" + str(int((len(self.plugins) - q.qsize()) * 100 / len(self.plugins))) + "%")
+            # sys.stdout.flush()
             time.sleep(1)
         q.join()
-        sys.stdout.write("\r")
+        # sys.stdout.write("\r")
 
 
 jooscan = JooScan()
