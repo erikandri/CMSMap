@@ -20,25 +20,15 @@ class Report:
         self.col()
 
     def col(self):
-        if sys.stdout.isatty() and platform.system() == "Hacker":
-            self.green = '\033[32m'
-            self.blue = '\033[94m'
-            self.red = '\033[31m'
-            self.brown = '\033[33m'
-            self.grey = '\033[90m'
-            self.orange = '\033[38;5;208m'
-            self.yellow = '\033[93m'
-            self.end = '\033[0m'
-
-        else:  # Disalbing col for windows and pipes
-            self.green = ""
-            self.orange = ""
-            self.blue = ""
-            self.red = ""
-            self.brown = ""
-            self.grey = ""
-            self.yellow = ""
-            self.end = ""
+        # Disalbing col for windows and pipes
+        self.green = ""
+        self.orange = ""
+        self.blue = ""
+        self.red = ""
+        self.brown = ""
+        self.grey = ""
+        self.yellow = ""
+        self.end = ""
 
     def info(self, msg):
         self.WriteTextFile("[I] " + msg)

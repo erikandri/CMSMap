@@ -71,11 +71,8 @@ class MooScan:
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
                     requester.request(self.url + file, data=None)
-                    # sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
-                    # sys.stdout.flush()
                     if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(file)
-                # sys.stdout.write("\r")
                 for file in self.defFilesFound:
                     msg = self.url + file
                     report.info(msg)

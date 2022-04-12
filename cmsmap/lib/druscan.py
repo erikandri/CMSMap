@@ -130,11 +130,8 @@ class DruScan:
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
                     requester.request(self.url + file, data=None)
-                    # sys.stdout.write("\r" + str(int(100 * int(r + 1) / len(self.defaultFiles))) + "%")
-                    # sys.stdout.flush()
                     if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(self.url + file)
-                # sys.stdout.write("\r")
                 for file in self.defFilesFound:
                     msg = file
                     report.info(msg)
@@ -260,10 +257,7 @@ class DruScan:
         # Add all plugins to the queue
         for r, i in enumerate(self.plugins):
             q.put(i)
-            # sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.plugins)) + "%")
-            # sys.stdout.flush()
         q.join()
-        # sys.stdout.write("\r")
 
 
 druscan = DruScan()

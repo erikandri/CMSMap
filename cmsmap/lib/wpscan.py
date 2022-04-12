@@ -244,11 +244,8 @@ class WPScan:
         for i in self.plugins:
             q.put(i)
         while not q.empty():
-            # sys.stdout.write("\r" + str(int((len(self.plugins) - q.qsize()) * 1.0 / len(self.plugins) * 100)) + "%")
-            # sys.stdout.flush()
             time.sleep(1)
         q.join()
-        # sys.stdout.write("\r")
         self.pluginsFound = sorted(set(self.pluginsFound))
 
     # self.pluginsFound are now a dictionary {"plugin_name":"plugin_version"}
@@ -281,7 +278,6 @@ class WPScan:
         for r, i in enumerate(self.timthumbs):
             q.put(i)
         q.join()
-        # sys.stdout.write("\r")
         if self.timthumbsFound:
             for timthumbsFound in self.timthumbsFound:
                 msg = self.url + "/" + timthumbsFound
@@ -306,10 +302,7 @@ class WPScan:
         # Add all theme to the queue
         for r, i in enumerate(self.themes):
             q.put(i)
-            # sys.stdout.write("\r" + str(100 * int(r + 1) / len(self.themes)) + "%")
-            # sys.stdout.flush()
         q.join()
-        # sys.stdout.write("\r")
         for themesFound in self.themesFound:
             msg = themesFound
             report.info(msg)

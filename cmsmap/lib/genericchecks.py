@@ -150,13 +150,7 @@ class GenericChecks:
             # Add all plugins to the queue
             for commFilesIndex, file in enumerate(self.commFiles):
                 q.put(file + ext)
-                # sys.stdout.write("\r" + str((100 * ((len(self.commFiles) * extIndex) + commFilesIndex) /
-                #                              (len(self.commFiles) * len(
-                #                                  self.commExt)))) + "% " + file + ext + "            ")
-                # sys.stdout.flush()
             q.join()
-            # sys.stdout.write("\r")
-            # sys.stdout.flush()
 
         for file in self.interFiles:
             msg = self.url + "/" + file
