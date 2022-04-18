@@ -9,3 +9,5 @@ cmsmap/__pycache__/
 .vscode
 build
 dist
+cmsmap/exploitdb/
+cmsmap/exploit-database/

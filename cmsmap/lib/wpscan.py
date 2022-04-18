@@ -39,11 +39,11 @@ class WPScan:
         self.XMLRPCEnable = True
         self.theme = None
         self.notExistingCode = 404
-        self.confFiles = [line.strip() for line in open(initializer.confFiles)]
-        self.plugins = [line.strip() for line in open(initializer.wp_plugins)]
-        self.themes = [line.strip() for line in open(initializer.wp_themes)]
-        self.themes_small = [line.strip() for line in open(initializer.wp_themes_small)]
-        self.timthumbs = [line.strip() for line in open(initializer.wp_timthumbs)]
+        self.confFiles = [line.strip() for line in open(initializer.confFiles, encoding='utf-8')]
+        self.plugins = [line.strip() for line in open(initializer.wp_plugins, encoding='utf-8')]
+        self.themes = [line.strip() for line in open(initializer.wp_themes, encoding='utf-8')]
+        self.themes_small = [line.strip() for line in open(initializer.wp_themes_small, encoding='utf-8')]
+        self.timthumbs = [line.strip() for line in open(initializer.wp_timthumbs, encoding='utf-8')]
 
     # WordPress checks
     def WPrun(self):
