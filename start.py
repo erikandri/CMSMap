@@ -30,5 +30,10 @@ def execute(command):
 
 
 if __name__ == '__main__':
-    command = ['py', 'cmsmap.py', 'https://stmik-amikbandung.ac.id']
+    args = sys.argv
+    if len(args) < 2:
+        print('Example: py start.py https://testportal.helium.sh')
+        exit(0)
+    command = ['py', 'cmsmap.py', args[1], '-F']
+    # command = ['py', 'cmsmap.py', 'https://stmik-amikbandung.ac.id']
     execute(command=command)
