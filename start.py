@@ -4,24 +4,21 @@ import time
 
 
 def execute(command):
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
-    # Poll process for new output until finished
     while True:
         nextline = process.stdout.readline()
         if process.poll() is not None:
             break
-        print('pp:', nextline.decode('utf-8'), end='')
+        print('pp:', nextline, end='')
         time.sleep(1)
 
-        # sys.stdout.write(nextline.decode('utf-8'))
-        # sys.stdout.flush()
-
     output = process.communicate()[0]
-    print('Communicate:', output)
+    print('\n\nCommunicate is:', output)
     exitCode = process.returncode
 
     if exitCode == 0:
+        print('\n\nReturn exitCode == 0')
         return output
     else:
         raise Exception(command, exitCode, output)
