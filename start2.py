@@ -18,6 +18,7 @@ class MyClass(threading.Thread):
                              universal_newlines=True)
 
         self.stdout, self.stderr = p.communicate()
+        print(self.stdout)
 
 
 if __name__ == '__main__':
