@@ -16,7 +16,7 @@ class MyClass(threading.Thread):
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              universal_newlines=True,
-                             bufsize=1,
+                             bufsize=0,
                              close_fds=True)
 
         self.stdout, self.stderr = p.communicate()
