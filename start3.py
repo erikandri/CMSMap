@@ -3,6 +3,7 @@ import os
 import pty
 from subprocess import Popen, STDOUT
 
+file = open('out1.txt', 'a+')
 master_fd, slave_fd = pty.openpty()
 proc = Popen(['python', 'cmsmap.py', 'https://stmik-amikbandung.ac.id'],
              stdin=slave_fd, stdout=slave_fd, stderr=STDOUT, close_fds=True)
@@ -18,7 +19,8 @@ try:
         else:
             if not data:  # EOF
                 break
-            print('got ' + repr(data))
+            rdata = repr(data)
+            print('got ' + rdata, file=file)
 finally:
     os.close(master_fd)
     if proc.poll() is None:
