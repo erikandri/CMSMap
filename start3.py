@@ -6,7 +6,7 @@ from subprocess import Popen, STDOUT
 file = open('out1.txt', 'a+')
 master_fd, slave_fd = pty.openpty()
 proc = Popen(['python', 'cmsmap.py', 'https://stmik-amikbandung.ac.id'],
-             stdin=slave_fd, stdout=slave_fd, stderr=STDOUT, close_fds=True)
+             stdin=slave_fd, stdout=slave_fd, stderr=STDOUT, close_fds=True, universal_newlines=True)
 os.close(slave_fd)
 try:
     while 1:
