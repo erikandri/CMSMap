@@ -30,4 +30,6 @@ if __name__ == '__main__':
     myclass.start()
     myclass.join()
     print('STDOUT BELOW...')
-    print(myclass.stdout)
+    file = open('out1.txt', 'a+')
+    print(myclass.stdout, file=file)
+    file.close()
