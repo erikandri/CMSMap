@@ -12,10 +12,12 @@ class MyClass(threading.Thread):
 
     def run(self):
         p = subprocess.Popen(self.command,
-                             shell=True,
+                             shell=False,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
-                             universal_newlines=True)
+                             universal_newlines=True,
+                             bufsize=1,
+                             close_fds=True)
 
         self.stdout, self.stderr = p.communicate()
         print(self.stdout)
