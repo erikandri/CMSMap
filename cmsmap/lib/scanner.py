@@ -112,8 +112,11 @@ class Scanner:
             if self.force is None:
                 msg = "CMS detection failed :("
                 report.error(msg)
-                msg = "Use -f to force CMSmap to scan (W)ordpress, (J)oomla or (D)rupal"
-                report.error(msg)
+                msg = "We can not detect CMS on your target or your target maybe use WAF (Web Application Firewall)"
+                # msg = "Try to rescan using custom options to force the scanner to scan chosen CMS"
+                # report.error(msg)
+                # msg = "Use -f to force CMSmap to scan (W)ordpress, (J)oomla or (D)rupal"
+                # report.error(msg)
                 sys.exit(1)
             else:
                 self.ForceCMSType()

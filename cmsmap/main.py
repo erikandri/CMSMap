@@ -122,7 +122,8 @@ def main():
     msg = "Date & Time: " + time.strftime('%d/%m/%Y %H:%M:%S')
     report.status(msg)
 
-    updater.UpdateExploitDB()
+    if not initializer.NoExploitdb:
+        updater.UpdateExploitDB()
     updater.CheckLocalFiles()
 
     if initializer.forceCMSmapUpdate:

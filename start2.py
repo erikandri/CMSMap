@@ -28,7 +28,7 @@ if __name__ == '__main__':
     #     print('example: py start2.py https://stmik-amikbandung.ac.id')
     #     exit(0)
     # url = sys.argv[1]
-    command = ['python', 'cmsmap.py', 'https://stmik-amikbandung.ac.id']
+    command = ['python', 'cmsmap.py', 'https://stmik-amikbandung.ac.id', '--noedb']
     myclass = MyClass(command=command)
     myclass.start()
     myclass.join()
