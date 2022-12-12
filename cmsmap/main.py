@@ -82,6 +82,7 @@ def main():
 
     report = Report(color=args.color)
     initializer.verbose = args.verbose
+    initializer.url = args.target
     initializer.threads = args.threads
     initializer.BruteForcingAttack = bruter.usrlist = args.usr
     initializer.CrackingPasswords = hashfile = args.crack
@@ -94,6 +95,7 @@ def main():
     initializer.disableCleanURLs = args.nocleanurls
     initializer.nosslcheck = args.nosslcheck
     initializer.default = args.default
+    scanner.url = args.target
     scanner.file = args.input
     scanner.force = args.force
     bruter.wpnoxmlrpc = args.noxmlrpc
