@@ -194,8 +194,7 @@ def main():
     diffTime = end - start
     msg = "Date & Time: " + time.strftime('%d/%m/%Y %H:%M:%S')
     report.status(msg)
-    msg = "Completed in: " + str(
-        datetime.timedelta(seconds=diffTime)).split(".")[0]
+    msg = "Completed in: " + str(datetime.timedelta(seconds=diffTime)).split(".")[0]
     report.status(msg)
     if initializer.output:
         msg = "Output File Saved in: " + report.fn
