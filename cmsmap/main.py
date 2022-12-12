@@ -35,8 +35,7 @@ def main():
         """
         try:
             parser = argparse.ArgumentParser(
-                description="CMSmap tool v" + str(__version__) +
-                            " - Simple CMS Scanner\nAuthor: Mike Manzotti",
+                description="CMSmap tool v" + str(__version__) + " - Simple CMS Scanner\nAuthor: Mike Manzotti",
                 formatter_class=RawTextHelpFormatter,
                 add_help=False,
                 epilog=examples)
@@ -75,8 +74,7 @@ def main():
             sys.exit(1)
 
     else:
-        msg = "No options provided. Run " + os.path.basename(
-            sys.argv[0]) + " -h for help"
+        msg = "No options provided. Run " + os.path.basename(sys.argv[0]) + " -h for help"
         report.error(msg)
         sys.exit(1)
 
