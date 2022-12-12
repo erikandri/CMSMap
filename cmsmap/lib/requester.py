@@ -43,7 +43,7 @@ class Requester:
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
-        except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
             self.htmltext = e.read().decode('utf-8', 'ignore')
@@ -66,7 +66,7 @@ class Requester:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
-        except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
             self.htmltext = e.read().decode('utf-8', 'ignore')
@@ -90,7 +90,7 @@ class Requester:
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
             self.status_code = 200
-        except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
             self.htmltext = e.read().decode('utf-8', 'ignore')

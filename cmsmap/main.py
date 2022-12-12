@@ -136,7 +136,7 @@ def main():
                 else:
                     bruter.force = scanner.force
                     bruter.Start()
-            except urllib.error.URLError as e:
+            except urllib.error.HTTPError or urllib.error.URLError as e:
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
@@ -160,7 +160,7 @@ def main():
                 msg = "Target: " + scanner.url + " (" + addr + ")"
                 report.status(msg)
                 scanner.RunScanner()
-            except urllib.error.URLError as e:
+            except urllib.error.HTTPError or urllib.error.URLError as e:
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
@@ -180,7 +180,7 @@ def main():
             msg = "Target: " + scanner.url + " (" + addr + ")"
             report.status(msg)
             scanner.RunScanner()
-        except urllib.error.URLError as e:
+        except urllib.error.HTTPError or urllib.error.URLError as e:
             msg = "Unable to scan: " + scanner.url
             report.error(msg)
             report.error(str(e.reason))
