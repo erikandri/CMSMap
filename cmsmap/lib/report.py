@@ -6,8 +6,8 @@ from .initialize import initializer
 
 
 class Report:
-
-    def __init__(self):
+    def __init__(self, color=False):
+        self.color = color
         self.end = None
         self.yellow = None
         self.grey = None
@@ -21,15 +21,24 @@ class Report:
         self.col()
 
     def col(self):
-        # Disalbing col for windows and pipes
-        self.green = ""
-        self.orange = ""
-        self.blue = ""
-        self.red = ""
-        self.brown = ""
-        self.grey = ""
-        self.yellow = ""
-        self.end = ""
+        if self.color:
+            self.green = '\033[32m'
+            self.blue = '\033[94m'
+            self.red = '\033[31m'
+            self.brown = '\033[33m'
+            self.grey = '\033[90m'
+            self.orange = '\033[38;5;208m'
+            self.yellow = '\033[93m'
+            self.end = '\033[0m'
+        else:  # Disalbing color
+            self.green = ""
+            self.orange = ""
+            self.blue = ""
+            self.red = ""
+            self.brown = ""
+            self.grey = ""
+            self.yellow = ""
+            self.end = ""
 
     def info(self, msg):
         self.WriteTextFile("[I] " + msg)

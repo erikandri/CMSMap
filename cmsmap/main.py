@@ -17,12 +17,13 @@ from .lib.exploitdbsearch import searcher
 from .lib.genericchecks import genericchecker
 from .lib.initialize import initializer
 from .lib.postexploit import postexploiter
-from .lib.report import report
+from .lib.report import Report
 from .lib.scanner import scanner
 from .version import __version__
 
 
 def main():
+    report = Report()
     # command line arguments
 
     if sys.argv[1:]:
@@ -69,6 +70,7 @@ def main():
             argsothers.add_argument("-h", "--help", help="show this help message and exit", action="help")
             argsothers.add_argument("-D", "--default", help="run CMSmap with default options", action="store_true", default=False)
             argsothers.add_argument("-U", "--update", help="use (C)MSmap, (P)lugins or (PC) for both", metavar="")
+            argsothers.add_argument("--color", action="store_true", help="use color for ouput stdout", default=False)
             args = parser.parse_args()
         except:
             sys.exit(1)
@@ -78,6 +80,7 @@ def main():
         report.error(msg)
         sys.exit(1)
 
+    report = Report(color=args.color)
     initializer.verbose = args.verbose
     initializer.threads = args.threads
     initializer.BruteForcingAttack = bruter.usrlist = args.usr
