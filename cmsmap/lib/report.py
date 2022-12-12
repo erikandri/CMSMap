@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import os, sys, platform
+import os
+import sys
 
 from .initialize import initializer
 

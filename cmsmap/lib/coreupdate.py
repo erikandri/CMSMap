@@ -1,5 +1,8 @@
 #! /usr/bin/env python3
-import os, sys, re, subprocess
+import os
+import re
+import subprocess
+import sys
 
 from .initialize import initializer
 from .report import report

@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
-import sys, urllib, re, http.cookiejar, ssl
+import re
+import sys
 
 # Import Objects
-from .initialize import initializer
 from .report import report
 from .requester import requester
 
+
 # Import Classes
-from .threadscanner import MyHandler
 
 
 # Perform brute-force, dictionary attacks
@@ -59,11 +59,11 @@ class BruteForcer:
             self.pswlist.append(user)
             for pwd in self.pswlist:
                 self.postdata = (
-                    '<methodCall><methodName>wp.getUsersBlogs</methodName><params>'
-                    '<param><value><string>' + user +
-                    '</string></value></param>'
-                    '<param><value><string>' + pwd +
-                    '</string></value></param></params></methodCall>')
+                        '<methodCall><methodName>wp.getUsersBlogs</methodName><params>'
+                        '<param><value><string>' + user +
+                        '</string></value></param>'
+                        '<param><value><string>' + pwd +
+                        '</string></value></param></params></methodCall>')
                 msg = "Trying Credentials: " + user + " " + pwd
                 report.verbose(msg)
                 requester.noredirect(self.url + '/xmlrpc.php', self.postdata)
@@ -121,7 +121,7 @@ class BruteForcer:
                     msg = "Trying Credentials: " + user + " " + pwd
                     report.verbose(msg)
                     requester.requestcookie(self.url + self.joologin, self.postdata)
-                    if re.findall(re.compile('Control Panel'),requester.htmltext):
+                    if re.findall(re.compile('Control Panel'), requester.htmltext):
                         msg = "Valid Credentials: " + user + " " + pwd
                         report.high(msg)
                 self.pswlist.pop()  # remove user
@@ -133,16 +133,17 @@ class BruteForcer:
         for user in self.usrlist:
             self.pswlist.append(user)  # try username as password
             for pwd in self.pswlist:
-                query_args = { "name": user, "pass": pwd, "form_id": "user_login_form" }
+                query_args = {"name": user, "pass": pwd, "form_id": "user_login_form"}
                 msg = "Trying Credentials: " + user + " " + pwd
                 report.verbose(msg)
                 requester.noredirect(self.url + self.drulogin, data=query_args)
-                if re.findall( re.compile( 'Sorry, too many failed login attempts|Try again later'), requester.htmltext):
+                if re.findall(re.compile('Sorry, too many failed login attempts|Try again later'), requester.htmltext):
                     msg = "Account Lockout Enabled: Your IP address has been temporary blocked. Try it later or from a different IP address"
                     report.error(msg)
-                if requester.status_code == 403 or requester.status_code == 303 :
+                if requester.status_code == 403 or requester.status_code == 303:
                     msg = "Valid Credentials: " + user + " " + pwd
                     report.high(msg)
             self.pswlist.pop()  # remove user
+
 
 bruter = BruteForcer()

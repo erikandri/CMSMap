@@ -1,14 +1,15 @@
 #! /usr/bin/env python3
-import sys, re, queue, time
+import queue
+import re
+import time
 
+from .bruteforcer import bruter
+from .exploitdbsearch import searcher
+from .genericchecks import genericchecker
 # Import Objects
 from .initialize import initializer
 from .report import report
-from .exploitdbsearch import searcher
-from .genericchecks import genericchecker
-from .bruteforcer import bruter
 from .requester import requester
-
 # Import Class
 from .threadscanner import ThreadScanner
 

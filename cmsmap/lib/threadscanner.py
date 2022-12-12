@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
-import urllib, http.client, threading, time, socket
+import http.client
+import threading
+import urllib
 
 # Import Object
-from .initialize import initializer
-from .report import report
 from .requester import requester
 
 

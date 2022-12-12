@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 import queue
 import re
-import sys
 import time
 
 from .bruteforcer import bruter

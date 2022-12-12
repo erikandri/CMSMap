@@ -1,16 +1,17 @@
 #! /usr/bin/env python3
-import sys, re, hashlib, subprocess, os
+import hashlib
+import os
+import subprocess
 
+from .exploitdbsearch import searcher
+from .genericchecks import genericchecker
 # Import Objects
 from .initialize import initializer
 from .report import report
-from .exploitdbsearch import searcher
-from .genericchecks import genericchecker
-from .bruteforcer import bruter
 from .requester import requester
 
+
 # Import Class
-from .threadscanner import ThreadScanner
 
 
 class MooScan:

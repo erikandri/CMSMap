@@ -1,12 +1,14 @@
 #! /usr/bin/env python3
-import sys, re, time, queue
-
+import queue
+import re
+import sys
+import time
 # Import Object
 from urllib.parse import urlparse
+
 from .initialize import initializer
 from .report import report
 from .requester import requester
-
 # Import Class
 from .threadscanner import ThreadScanner
 
