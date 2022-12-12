@@ -24,9 +24,9 @@ class MooScan:
         self.pluginsFound = []
         self.notValidLen = []
         self.notExistingCode = 404
-        self.confFiles = [line.strip() for line in open(initializer.confFiles)]
+        self.confFiles = [line.strip() for line in open(initializer.confFiles, encoding='utf-8')]
         # No plugins for moodle
-        # self.plugins = [line.strip() for line in open(initializer.moo_plugins)]
+        # self.plugins = [line.strip() for line in open(initializer.moo_plugins, encoding='utf-8')]
 
     # Moodle checks
     def Moorun(self):
@@ -42,9 +42,9 @@ class MooScan:
 
     # Grab the versions and default files generated at run time
     def MooGetLocalFiles(self):
-        self.versions = [line.strip() for line in open(initializer.moo_versions)]
-        self.defaultFiles = [line.strip() for line in open(initializer.moo_defaultFiles)]
-        self.defaultFolders = [line.strip() for line in open(initializer.moo_defaultFolders)]
+        self.versions = [line.strip() for line in open(initializer.moo_versions, encoding='utf-8')]
+        self.defaultFiles = [line.strip() for line in open(initializer.moo_defaultFiles, encoding='utf-8')]
+        self.defaultFolders = [line.strip() for line in open(initializer.moo_defaultFolders, encoding='utf-8')]
 
     # Find old or temp Moodle config files left on the web root
     def MooConfigFiles(self):

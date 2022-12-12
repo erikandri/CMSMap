@@ -25,12 +25,12 @@ class BruteForcer:
     def Start(self):
         if type(self.usrlist) is str:
             try:
-                self.usrlist = [line.strip() for line in open(self.usrlist)]
+                self.usrlist = [line.strip() for line in open(self.usrlist, encoding='utf-8')]
             except IOError:
                 self.usrlist = [self.usrlist]
         if type(self.pswlist) is str:
             try:
-                self.pswlist = [line.strip() for line in open(self.pswlist)]
+                self.pswlist = [line.strip() for line in open(self.pswlist, encoding='utf-8')]
             except IOError:
                 self.pswlist = [self.pswlist]
 

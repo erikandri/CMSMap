@@ -120,7 +120,7 @@ def main():
         updater.forceCMSmapUpdate()
     elif initializer.BruteForcingAttack:
         if scanner.file is not None:
-            targets = [line.strip() for line in open(scanner.file)]
+            targets = [line.strip() for line in open(scanner.file, encoding='utf-8')]
         else:
             targets = [args.target]
         for url in targets:
@@ -148,7 +148,7 @@ def main():
     elif initializer.CrackingPasswords:
         postexploiter.CrackingHashesType(hashfile, initializer.wordlist)
     elif scanner.file is not None:
-        targets = [line.strip() for line in open(scanner.file)]
+        targets = [line.strip() for line in open(scanner.file, encoding='utf-8')]
         for url in targets:
             if url.endswith("/"):
                 url = url[:-1]

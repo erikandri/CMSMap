@@ -33,10 +33,10 @@ class DruScan:
         self.notExistingCode = 404
         self.notValidLen = []
         self.pluginPath = "/modules/"
-        self.confFiles = [line.strip() for line in open(initializer.confFiles)]
+        self.confFiles = [line.strip() for line in open(initializer.confFiles, encoding='utf-8')]
         self.usernames = []
         self.pluginsFound = []
-        self.plugins = [line.strip() for line in open(initializer.dru_plugins)]
+        self.plugins = [line.strip() for line in open(initializer.dru_plugins, encoding='utf-8')]
 
     # Drupal checks
     def Drurun(self):
@@ -68,10 +68,10 @@ class DruScan:
 
     # Grab the small plugins, versions and default files generated at run time
     def DruGetLocalFiles(self):
-        self.plugins_small = [line.strip() for line in open(initializer.dru_plugins_small)]
-        self.versions = [line.strip() for line in open(initializer.dru_versions)]
-        self.defaultFiles = [line.strip() for line in open(initializer.dru_defaultFiles)]
-        self.defaultFolders = [line.strip() for line in open(initializer.dru_defaultFolders)]
+        self.plugins_small = [line.strip() for line in open(initializer.dru_plugins_small, encoding='utf-8')]
+        self.versions = [line.strip() for line in open(initializer.dru_versions, encoding='utf-8')]
+        self.defaultFiles = [line.strip() for line in open(initializer.dru_defaultFiles, encoding='utf-8')]
+        self.defaultFolders = [line.strip() for line in open(initializer.dru_defaultFolders, encoding='utf-8')]
 
     # Find Drupal version and check it on exploit-db
     def DruVersion(self):

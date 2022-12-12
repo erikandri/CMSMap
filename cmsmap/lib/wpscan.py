@@ -83,10 +83,10 @@ class WPScan:
 
     # Grab the small plugins, versions and default files generated at run time
     def WPGetLocalFiles(self):
-        self.plugins_small = [line.strip() for line in open(initializer.wp_plugins_small)]
-        self.versions = [line.strip() for line in open(initializer.wp_versions)]
-        self.defaultFiles = [line.strip() for line in open(initializer.wp_defaultFiles)]
-        self.defaultFolders = [line.strip() for line in open(initializer.wp_defaultFolders)]
+        self.plugins_small = [line.strip() for line in open(initializer.wp_plugins_small, encoding='utf-8')]
+        self.versions = [line.strip() for line in open(initializer.wp_versions, encoding='utf-8')]
+        self.defaultFiles = [line.strip() for line in open(initializer.wp_defaultFiles, encoding='utf-8')]
+        self.defaultFolders = [line.strip() for line in open(initializer.wp_defaultFolders, encoding='utf-8')]
 
     # Find WordPress version and check it on exploit-db
     def WPVersion(self):

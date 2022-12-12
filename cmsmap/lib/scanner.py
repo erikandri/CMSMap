@@ -72,38 +72,33 @@ class Scanner:
         report.verbose(msg)
         if self.force is None:
             requester.request(self.url + "/wp-config.php", data=None)
-            if (requester.status_code == 403 or
-                requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
+            if (requester.status_code == 403 or requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
                 self.force = 'W'
             else:
                 msg = "WordPress Config File Not Found: " + self.url + "/wp-config.php"
                 report.verbose(msg)
             # Joomla
             requester.request(self.url + "/configuration.php", data=None)
-            if (requester.status_code == 403 or
-                requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
+            if (requester.status_code == 403 or requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
                 self.force = 'J'
             else:
                 msg = "Joomla Config File Not Found: " + self.url + "/configuration.php"
                 report.verbose(msg)
             # Drupal
             requester.request(self.url + "/sites/default/settings.php", data=None)
-            if (requester.status_code == 403 or
-                requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
+            if (requester.status_code == 403 or requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
                 self.force = 'D'
             pUrl = urlparse(self.url)
             netloc = pUrl.netloc.lower()
             requester.request(self.url + "/sites/" + netloc + "/settings.php", data=None)
-            if (requester.status_code == 403 or
-                requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
+            if (requester.status_code == 403 or requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
                 self.force = 'D'
             else:
                 msg = "Drupal Config File Not Found: " + self.url + "/sites/default/settings.php"
                 report.verbose(msg)
             # Moodle
             requester.request(self.url + "/config.php", data=None)
-            if (requester.status_code == 403 or
-                requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
+            if (requester.status_code == 403 or requester.status_code == 200) and len(requester.htmltext) not in self.notValidLen and self.force is None:
                 self.force = 'M'
             else:
                 msg = "Moodle Config File Not Found: " + self.url + "/config.php"
