@@ -6,6 +6,7 @@ import socket
 import sys
 import time
 import urllib
+import urllib.error
 import urllib.request
 from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
@@ -132,7 +133,7 @@ def main():
                 else:
                     bruter.force = scanner.force
                     bruter.Start()
-            except urllib.request.URLError as e:
+            except urllib.error.URLError as e:
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
@@ -156,7 +157,7 @@ def main():
                 msg = "Target: " + scanner.url + " (" + addr + ")"
                 report.status(msg)
                 scanner.RunScanner()
-            except urllib.request.URLError as e:
+            except urllib.error.URLError as e:
                 msg = "Unable to scan: " + scanner.url
                 report.error(msg)
                 report.error(str(e.reason))
@@ -176,7 +177,7 @@ def main():
             msg = "Target: " + scanner.url + " (" + addr + ")"
             report.status(msg)
             scanner.RunScanner()
-        except urllib.request.URLError as e:
+        except urllib.error.URLError as e:
             msg = "Unable to scan: " + scanner.url
             report.error(msg)
             report.error(str(e.reason))
