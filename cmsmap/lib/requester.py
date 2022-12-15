@@ -40,9 +40,11 @@ class Requester:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
+            if self.response.status != 200:
+                raise urllib.error.HTTPError
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
-            self.status_code = 200
+            self.status_code = self.response.status
         except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
@@ -64,8 +66,10 @@ class Requester:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
+            if self.response.status != 200:
+                raise urllib.error.HTTPError
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
-            self.status_code = 200
+            self.status_code = self.response.status
         except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
@@ -87,9 +91,11 @@ class Requester:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'), context=self.ctx)
             else:
                 self.response = urllib.request.urlopen(url=parse.quote_plus(self.req.get_full_url(), safe=':/'))
+            if self.response.status != 200:
+                raise urllib.error.HTTPError
             # it will ignore any bad character without replacing it
             self.htmltext = self.response.read().decode('utf-8', 'ignore')
-            self.status_code = 200
+            self.status_code = self.response.status
         except urllib.error.HTTPError or urllib.error.URLError as e:
             # Does not return  200
             self.response = e
