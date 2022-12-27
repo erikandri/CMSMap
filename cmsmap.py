@@ -14,11 +14,11 @@ def exit(signum, frame):
         if input("[y/N]: ").lower().startswith('y'):
             msg = "Bye! Quitting.. "
             report.message(msg)
-            sys.exit(1)
+            sys.exit(0)
     except KeyboardInterrupt:
         msg = "Bye! Quitting.."
         report.message(msg)
-        sys.exit(1)
+        sys.exit(0)
     signal.signal(signal.SIGINT, exit)
 
 

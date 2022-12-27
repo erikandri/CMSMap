@@ -47,7 +47,7 @@ class CoreUpdate:
             msg = "Example: " + os.path.basename(sys.argv[0]) + " -U PC"
             report.message(msg)
         self.SortUniqueFile()
-        # sys.exit(1)
+        sys.exit(0)
 
     # Run git pull from the CMSmap git repo
     def UpdateCMSmap(self):

@@ -113,7 +113,7 @@ class Scanner:
                 # report.error(msg)
                 # msg = "Use -f to force CMSmap to scan (W)ordpress, (J)oomla or (D)rupal"
                 # report.error(msg)
-                sys.exit(1)
+                sys.exit(0)
             else:
                 self.ForceCMSType()
         else:
