@@ -75,29 +75,29 @@ class GenericChecks:
         requester.request(self.url, data=None)
         msg = "Checking headers ..."
         report.verbose(msg)
-        if requester.response.info().get('Server'):
-            msg = "Server: " + requester.response.info().get('Server')
+        if requester.response.headers.get('Server'):
+            msg = "Server: " + requester.response.headers.get('Server')
             report.info(msg)
-        if requester.response.info().get('X-Powered-By'):
-            msg = "X-Powered-By: " + requester.response.info().get('X-Powered-By')
+        if requester.response.headers.get('X-Powered-By'):
+            msg = "X-Powered-By: " + requester.response.headers.get('X-Powered-By')
             report.info(msg)
-        if requester.response.info().get('X-Generator'):
-            msg = "X-Generator: " + requester.response.info().get('X-Generator')
+        if requester.response.headers.get('X-Generator'):
+            msg = "X-Generator: " + requester.response.headers.get('X-Generator')
             report.low(msg)
-        if requester.response.info().get('x-xss-protection') == '0':
+        if requester.response.headers.get('x-xss-protection') == '0':
             msg = "X-XSS-Protection Disabled"
             report.high(msg)
-        if not requester.response.info().get('x-frame-options') or (
-                requester.response.info().get('x-frame-options').lower() != 'sameorigin' or 'deny'):
+        if not requester.response.headers.get('x-frame-options') or (
+                requester.response.headers.get('x-frame-options').lower() != 'sameorigin' or 'deny'):
             msg = "X-Frame-Options: Not Enforced"
             report.low(msg)
-        if not requester.response.info().get('strict-transport-security'):
+        if not requester.response.headers.get('strict-transport-security'):
             msg = "Strict-Transport-Security: Not Enforced"
             report.info(msg)
-        if not requester.response.info().get('x-content-security-policy'):
+        if not requester.response.headers.get('x-content-security-policy'):
             msg = "X-Content-Security-Policy: Not Enforced"
             report.info(msg)
-        if not requester.response.info().get('x-content-type-options'):
+        if not requester.response.headers.get('x-content-type-options'):
             msg = "X-Content-Type-Options: Not Enforced"
             report.info(msg)
 
