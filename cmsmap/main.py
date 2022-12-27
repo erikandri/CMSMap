@@ -51,6 +51,7 @@ def main():
             argsscan.add_argument("-F", "--fullscan", help="full scan using large plugin lists. False positives and slow!", action="store_true", default=False)
             argsscan.add_argument("-t", "--threads", help="number of threads (Default 5)", metavar="", default=5)
             argsscan.add_argument("-a", "--agent", help="set custom user-agent", metavar="")
+            argsscan.add_argument("-rua", "--random-user-agent", action="store_true", help="enable random user-agent for each request", metavar="")
             argsscan.add_argument("-H", "--header", help="add custom header (e.g. 'Authorization: Basic ABCD...')", metavar="")
             argsscan.add_argument("-i", "--input", help="scan multiple targets listed in a given file", metavar="")
             argsscan.add_argument("-o", "--output", help="save output in a file", metavar="")
