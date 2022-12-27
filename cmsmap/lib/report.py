@@ -30,7 +30,7 @@ class Report:
             self.orange = '\033[38;5;208m'
             self.yellow = '\033[93m'
             self.end = '\033[0m'
-        else:  # Disalbing color
+        else:  # Disable color
             self.green = ""
             self.orange = ""
             self.blue = ""
