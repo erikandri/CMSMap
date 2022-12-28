@@ -17,6 +17,9 @@ from .threadscanner import ThreadScanner
 class GenericChecks:
 
     def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+        self.interFiles = None
+        self.NotExistingPage = None
+        self.relPath = None
         self.url = None
         self.headers = initializer.headers
         self.notExistingCode = 404

@@ -6,6 +6,35 @@ import os
 class Initialize:
 
     def __init__(self):
+        self.agent = None
+        self.headers = None
+        self.wordlist = None
+        self.dataPath = None
+        self.commFiles = None
+        self.confFiles = None
+        self.wp_plugins = None
+        self.wp_plugins_small = None
+        self.wp_themes_small = None
+        self.wp_themes = None
+        self.wp_versions = None
+        self.wp_timthumbs = None
+        self.wp_defaultFiles = None
+        self.wp_defaultFolders = None
+        self.joo_plugins = None
+        self.joo_plugins_small = None
+        self.joo_defaultFiles = None
+        self.joo_defaultFolders = None
+        self.joo_versions = None
+        self.dru_plugins = None
+        self.dru_plugins_small = None
+        self.dru_defaultFiles = None
+        self.dru_defaultFolders = None
+        self.dru_versions = None
+        self.moo_defaultFiles = None
+        self.moo_defaultFolders = None
+        self.moo_versions = None
+        self.edbtype = None
+        self.edbpath = None
         self.url = None
         self.netloc = None
         self.scheme = None

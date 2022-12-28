@@ -17,6 +17,10 @@ from .requester import Requester
 class MooScan:
     # Scan Moodle site
     def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+        self.versions = None
+        self.defaultFiles = None
+        self.defaultFolders = None
+        self.defFilesFound = None
         self.url = None
         self.usernames = []
         # Plugins can be in /local /blocks /mod

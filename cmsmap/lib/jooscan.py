@@ -17,6 +17,12 @@ from .threadscanner import ThreadScanner
 class JooScan:
     # Scan Joomla site
     def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+        self.plugins_small = None
+        self.versions = None
+        self.defaultFiles = None
+        self.defaultFolders = None
+        self.defFilesFound = None
+        self.pluginsFoundVers = None
         self.url = None
         self.usernames = []
         self.pluginPath = "?option="

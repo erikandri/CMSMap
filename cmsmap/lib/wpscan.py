@@ -17,6 +17,7 @@ from .threadscanner import ThreadScanner
 class WPScan:
     # Scan WordPress site
     def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+        self.defFilesFound = None
         self.pluginsFoundVers = None
         self.postdata = None
         self.defaultFolders = None
