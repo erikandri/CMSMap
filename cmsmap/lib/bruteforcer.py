@@ -14,6 +14,14 @@ from .requester import Requester
 class BruteForcer:
 
     def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+        self.postdata = None
+        self.wplogin = None
+        self.postdata = None
+        self.joologin = None
+        self.JooValidCredentials = None
+        self.postdata = None
+        self.drulogin = None
+        self.DruValidCredentials = None
         self.force = None
         self.wpnoxmlrpc = True
         self.url = None
