@@ -78,7 +78,7 @@ class CoreUpdate:
     # Run sort-uniq on the plugins files
     @staticmethod
     def SortUniqueFile():
-        for list in [
+        for new_list in [
             initializer.wp_plugins, initializer.wp_plugins_small, initializer.wp_themes_small,
             initializer.wp_defaultFiles, initializer.wp_defaultFolders,
             initializer.joo_plugins, initializer.joo_plugins_small, initializer.joo_defaultFiles,
@@ -86,8 +86,8 @@ class CoreUpdate:
             initializer.dru_plugins, initializer.dru_plugins_small,
             initializer.moo_defaultFiles, initializer.moo_defaultFolders
         ]:
-            readlist = sorted(set([line.strip() for line in open(list)]))
-            f = open(list, "w")
+            readlist = sorted(set([line.strip() for line in open(new_list)]))
+            f = open(new_list, "w")
             for plugin in readlist:
                 f.write("%s\n" % plugin)
             f.close()
