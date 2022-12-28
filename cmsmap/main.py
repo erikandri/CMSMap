@@ -36,7 +36,7 @@ def main():
         """
         try:
             parser = argparse.ArgumentParser(
-                description="CMSmap tool v" + str(__version__) + " - Simple CMS Scanner\nAuthor: Mike Manzotti",
+                description="CMSmap tool v" + str(__version__) + " - Simple CMS Scanner\nAuthor: Mike Manzotti\nUpdated By: Erik Andri Budiman",
                 formatter_class=RawTextHelpFormatter,
                 add_help=False,
                 epilog=examples)
@@ -51,7 +51,7 @@ def main():
             argsscan.add_argument("-F", "--fullscan", help="full scan using large plugin lists. False positives and slow!", action="store_true", default=False)
             argsscan.add_argument("-t", "--threads", help="number of threads (Default 5)", metavar="", default=5)
             argsscan.add_argument("-a", "--agent", help="set custom user-agent", metavar="", default=False)
-            argsscan.add_argument("-rua", "--random-user-agent", action="store_true", help="enable random user-agent for each request", metavar="")
+            argsscan.add_argument("--random-user-agent", action="store_true", help="enable random user-agent for each request", default=False)
             argsscan.add_argument("-H", "--header", help="add custom header (e.g. 'Authorization: Basic ABCD...')", metavar="")
             argsscan.add_argument("-i", "--input", help="scan multiple targets listed in a given file", metavar="")
             argsscan.add_argument("-o", "--output", help="save output in a file", metavar="")
@@ -73,7 +73,8 @@ def main():
             argsothers.add_argument("-U", "--update", help="use (C)MSmap, (P)lugins or (PC) for both", metavar="")
             argsothers.add_argument("--color", action="store_true", help="use color for ouput stdout", default=False)
             args = parser.parse_args()
-        except:
+        except Exception as e:
+            print(f"EXCEPTION: {e}")
             sys.exit(1)
 
     else:
