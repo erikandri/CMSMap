@@ -44,20 +44,23 @@ To uninstall it :
 
 Usage
 =====
-    usage: cmsmap [-f W/J/D] [-F] [-t] [-a] [-H] [-i] [-o] [-E] [-d] [-u] [-p]
-                  [-x] [-k] [-w] [-v] [-h] [-D] [-U W/J/D]
-                  [target]
+    usage: cmsmap.py [-f W/J/D/M] [-F] [-t] [-a] [--random-user-agent] [-H] [-i]
+                     [-o] [-E] [-c] [-s] [-d] [-u] [-p] [-x] [-k] [-w] [-v] [-h]
+                     [-D] [-U] [--color]
+                     [target]
     
-    CMSmap tool v1.0 - Simple CMS Scanner
+    CMSmap tool v1.5 - Simple CMS Scanner
     Author: Mike Manzotti
+    Updated By: Erik Andri Budiman
     
     Scan:
       target                target URL (e.g. 'https://example.com:8080/')
-      -f W/J/D, --force W/J/D
-                            force scan (W)ordpress, (J)oomla or (D)rupal
+      -f W/J/D/M, --force W/J/D/M
+                            force scan (W)ordpress, (J)oomla or (D)rupal or (M)oodle
       -F, --fullscan        full scan using large plugin lists. False positives and slow!
       -t , --threads        number of threads (Default 5)
       -a , --agent          set custom user-agent
+      --random-user-agent   enable random user-agent for each request
       -H , --header         add custom header (e.g. 'Authorization: Basic ABCD...')
       -i , --input          scan multiple targets listed in a given file
       -o , --output         save output in a file
@@ -78,8 +81,9 @@ Usage
     Others:
       -v, --verbose         verbose mode (Default false)
       -h, --help            show this help message and exit
-      -D, --default         rum CMSmap with default options
-      -U, --update          use (C)MSmap, (P)lugins or (PC) for both
+      -D, --default         run CMSmap with default options
+      -U , --update         use (C)MSmap, (P)lugins or (PC) for both
+      --color               use color for ouput stdout
     
     Examples:
       cmsmap.py https://example.com
@@ -87,7 +91,6 @@ Usage
       cmsmap.py https://example.com -i targets.txt -o output.txt
       cmsmap.py https://example.com -u admin -p passwords.txt
       cmsmap.py -k hashes.txt -w passwords.txt
-
 
 Contribution guidelines
 =====
