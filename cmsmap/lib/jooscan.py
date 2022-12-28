@@ -51,10 +51,12 @@ class JooScan:
             self.bruter.Joorun()
         self.genericchecker.AutocompleteOff('/administrator/index.php')
         self.JooDefaultFiles()
-        if initializer.FullScan: self.genericchecker.CommonFiles()
+        if initializer.FullScan:
+            self.genericchecker.CommonFiles()
         self.JooModulesIndex()
         self.JooComponents()
-        if not initializer.FullScan: self.searcher.exclude = self.excludeEDBPlugins
+        if not initializer.FullScan:
+            self.searcher.exclude = self.excludeEDBPlugins
         self.JooComponentsVersion()
         self.searcher.query = self.pluginsFound
         self.searcher.OfflinePlugins()
@@ -184,7 +186,8 @@ class JooScan:
     def JooComponents(self):
         msg = "Searching Joomla Components ..."
         self.report.message(msg)
-        if not initializer.FullScan: self.plugins = self.plugins_small
+        if not initializer.FullScan:
+            self.plugins = self.plugins_small
         # Create Code
         q = queue.Queue()
         # Spawn all threads into code

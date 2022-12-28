@@ -64,7 +64,8 @@ class CoreUpdate:
             self.report.message(msg)
             os.chdir(self.ospath)
             process = os.system("git pull")
-            if process == 0: success = True
+            if process == 0:
+                success = True
         if success:
             msg = "CMSmap is now updated to the latest version!"
             self.report.message(msg)
