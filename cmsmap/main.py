@@ -11,6 +11,8 @@ import urllib.request
 from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 
+import requests
+
 from .lib.bruteforcer import BruteForcer
 from .lib.coreupdate import CoreUpdate
 from .lib.exploitdbsearch import ExploitDBSearch
@@ -197,10 +199,11 @@ def main():
             msg = "Target: " + scanner.url + " (" + addr + ")"
             report.status(msg)
             scanner.RunScanner()
-        except urllib.error.HTTPError or urllib.error.URLError as e:
+        except requests.RequestException as e:
             msg = "Unable to scan: " + scanner.url
             report.error(msg)
-            report.error(str(e.reason))
+            for arg in e.args:
+                report.error(str(arg.reason))
         except socket.gaierror as e:
             msg = "Unable to resolve: " + scanner.url
             report.error(msg)
