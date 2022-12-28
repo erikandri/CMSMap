@@ -2,20 +2,20 @@
 import queue
 import re
 
-from .bruteforcer import bruter
+from .bruteforcer import BruteForcer
 from .exploitdbsearch import searcher
-from .genericchecks import genericchecker
+from .genericchecks import GenericChecks
 # Import Objects
 from .initialize import initializer
-from .report import report
-from .requester import requester
+from .report import Report
+from .requester import Requester
 # Import Class
 from .threadscanner import ThreadScanner
 
 
 class DruScan:
     # Scan Drupal site
-    def __init__(self):
+    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
         self.pluginsFoundVers = None
         self.postdata = None
         self.forgottenPsw = None
@@ -37,11 +37,15 @@ class DruScan:
         self.usernames = []
         self.pluginsFound = []
         self.plugins = [line.strip() for line in open(initializer.dru_plugins, encoding='utf-8')]
+        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.report = Report(color=is_color)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.requester = Requester(is_random_user_agent=is_random_user_agent)
 
     # Drupal checks
     def Drurun(self):
         msg = "CMS Detection: Drupal"
-        report.info(msg)
+        self.report.info(msg)
         searcher.cmstype = "Drupal"
         searcher.pluginPath = self.pluginPath
         self.DruGetLocalFiles()
@@ -51,13 +55,14 @@ class DruScan:
         self.DruViews()
         self.DruBlog()
         self.DruQUser()
-        bruter.usrlist = self.usernames
-        bruter.pswlist = initializer.weakpsw
-        if bruter.dictattack is not None: bruter.Drurun()
-        genericchecker.AutocompleteOff(self.quser)
+        self.bruter.usrlist = self.usernames
+        self.bruter.pswlist = initializer.weakpsw
+        if self.bruter.dictattack is not None:
+            self.bruter.Drurun()
+        self.genericchecker.AutocompleteOff(self.quser)
         self.DruDefaultFiles()
         if initializer.FullScan:
-            genericchecker.CommonFiles()
+            self.genericchecker.CommonFiles()
         self.DruForgottenPassword()
         self.DruModulesIndex()
         self.DruModules()
@@ -76,14 +81,14 @@ class DruScan:
     # Find Drupal version and check it on exploit-db
     def DruVersion(self):
         msg = "Checking Drupal version ..."
-        report.verbose(msg)
-        requester.request(self.url + '/CHANGELOG.txt', data=None)
+        self.report.verbose(msg)
+        self.requester.request(self.url + '/CHANGELOG.txt', data=None)
         regex = 'Drupal (\d+\.\d+),'
         pattern = re.compile(regex)
-        version = re.findall(pattern, requester.htmltext)
+        version = re.findall(pattern, self.requester.htmltext)
         if version:
             msg = "Drupal Version: " + version[0]
-            report.info(msg)
+            self.report.info(msg)
             if version[0] in self.versions:
                 for ver in self.versions:
                     searcher.query = ver
@@ -94,47 +99,47 @@ class DruScan:
     # Find current Drupal theme and check it on exploit-db
     def DruCurrentTheme(self):
         msg = "Checking Drupal theme"
-        report.verbose(msg)
-        requester.request(self.url, data=None)
-        DruTheme = re.findall("/themes/(.+?)/", requester.htmltext, re.IGNORECASE)
+        self.report.verbose(msg)
+        self.requester.request(self.url, data=None)
+        DruTheme = re.findall("/themes/(.+?)/", self.requester.htmltext, re.IGNORECASE)
         if DruTheme:
             self.Drutheme = DruTheme[0]
             msg = "Drupal Theme: " + self.Drutheme
-            report.info(msg)
+            self.report.info(msg)
             searcher.query = self.Drutheme
             searcher.OfflineTheme()
 
     # Find old or temp Drupal conf files left on the web root
     def DruConfigFiles(self):
         msg = "Checking Drupal old config files"
-        report.verbose(msg)
+        self.report.verbose(msg)
         for file in self.confFiles:
-            requester.request(self.url + "/sites/default/settings" + file, data=None)
-            if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
+            self.requester.request(self.url + "/sites/default/settings" + file, data=None)
+            if self.requester.status_code == 200 and len(self.requester.htmltext) not in self.notValidLen:
                 msg = "Configuration File Found: " + self.url + "/sites/default/settings" + file
-                report.high(msg)
+                self.report.high(msg)
 
     # Find default Drupal files (large number, prompt the user if display them all)
     def DruDefaultFiles(self):
         msg = "Checking Drupal default files"
-        report.verbose(msg)
+        self.report.verbose(msg)
         self.defFilesFound = []
         msg = "Drupal Default Files: "
-        report.message(msg)
+        self.report.message(msg)
         msg = "Drupal is likely to have a large number of default files"
-        report.message(msg)
+        self.report.message(msg)
         msg = "Would you like to list them all?"
-        report.message(msg)
+        self.report.message(msg)
         if not initializer.default:
             if input("[y/N]: ").lower().startswith('y'):
                 # Check for default files
                 for r, file in enumerate(self.defaultFiles):
-                    requester.request(self.url + file, data=None)
-                    if requester.status_code == 200 and len(requester.htmltext) not in self.notValidLen:
+                    self.requester.request(self.url + file, data=None)
+                    if self.requester.status_code == 200 and len(self.requester.htmltext) not in self.notValidLen:
                         self.defFilesFound.append(self.url + file)
                 for file in self.defFilesFound:
                     msg = file
-                    report.info(msg)
+                    self.report.info(msg)
 
     # Find Drupal users via the View Module
     def DruViews(self):
@@ -143,40 +148,40 @@ class DruScan:
             self.views = self.views.replace("?q=", "")
         self.alphanum = list("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         msg = "Enumerating Drupal Usernames via \"Views\" Module..."
-        report.message(msg)
-        requester.noredirect(self.url + "/?q=admin/views/ajax/autocomplete/user/NotExisingUser1234!", data=None)
+        self.report.message(msg)
+        self.requester.noredirect(self.url + "/?q=admin/views/ajax/autocomplete/user/NotExisingUser1234!", data=None)
         # If NotExisingUser1234 returns [], then enumerate users
-        if requester.htmltext == '[]':
+        if self.requester.htmltext == '[]':
             msg = "\"Views\" Module vulnerable to user enumeration"
-            report.medium(msg)
+            self.report.medium(msg)
             for letter in self.alphanum:
-                requester.noredirect(self.url + self.views + letter, data=None)
+                self.requester.noredirect(self.url + self.views + letter, data=None)
                 regex = '"(.+?)"'
                 pattern = re.compile(regex)
-                self.usernames = self.usernames + re.findall(pattern, requester.htmltext)
+                self.usernames = self.usernames + re.findall(pattern, self.requester.htmltext)
             self.usernames = sorted(set(self.usernames))
             for user in self.usernames:
                 msg = user
-                report.info(msg)
+                self.report.info(msg)
 
     # Find Drupal users checking the first 50 authors blogs
     def DruBlog(self):
         self.blog = "/?q=blog/"
         if not initializer.disableCleanURLs:
             self.blog = self.blog.replace("?q=", "")
-        requester.request(self.url + self.blog, data=None)
-        if requester.status_code == 200:
+        self.requester.request(self.url + self.blog, data=None)
+        if self.requester.status_code == 200:
             msg = "Enumerating Drupal Usernames via \"Blog\" Module..."
-            report.message(msg)
+            self.report.message(msg)
             for blognum in range(1, 50):
-                requester.request(self.url + self.blog + str(blognum), data=None)
+                self.requester.request(self.url + self.blog + str(blognum), data=None)
                 regex = "<title>(.+?)\'s"
                 pattern = re.compile(regex)
-                user = re.findall(pattern, requester.htmltext)
+                user = re.findall(pattern, self.requester.htmltext)
                 self.usernames = self.usernames + user
                 if user:
                     msg = user[0]
-                    report.info(msg)
+                    self.report.info(msg)
             self.usernames = sorted(set(self.usernames))
 
     def DruQUser(self):
@@ -184,16 +189,16 @@ class DruScan:
         if not initializer.disableCleanURLs:
             self.quser = self.quser.replace("?q=", "")
         msg = "Enumerating Drupal Usernames via \"" + self.quser + "\"..."
-        report.message(msg)
+        self.report.message(msg)
         for usernum in range(1, 50):
-            requester.request(self.url + self.quser + str(usernum), data=None)
+            self.requester.request(self.url + self.quser + str(usernum), data=None)
             regex = "users\/(.+?)\?destination"
             pattern = re.compile(regex)
-            user = re.findall(pattern, requester.htmltext)
+            user = re.findall(pattern, self.requester.htmltext)
             self.usernames = self.usernames + user
             if user:
                 msg = user[0]
-                report.info(msg)
+                self.report.info(msg)
         self.usernames = sorted(set(self.usernames))
 
     # Check if it is possible to enumerate users via Forgotten password functionality
@@ -202,34 +207,34 @@ class DruScan:
         if not initializer.disableCleanURLs:
             self.forgottenPsw = self.forgottenPsw.replace("?q=", "")
         msg = "Checking Drupal forgotten password ..."
-        report.verbose(msg)
+        self.report.verbose(msg)
         # Username Enumeration via Forgotten Password
         self.postdata = {"name": "N0t3xist!1234", "form_id": "user_pass"}
         # HTTP POST Request
-        requester.request(self.url + self.forgottenPsw, data=self.postdata)
+        self.requester.request(self.url + self.forgottenPsw, data=self.postdata)
         # print "[*] Trying Credentials: "+user+" "+pwd
-        if re.findall(re.compile('Sorry,.*N0t3xist!1234.*is not recognized'), requester.htmltext):
+        if re.findall(re.compile('Sorry,.*N0t3xist!1234.*is not recognized'), self.requester.htmltext):
             msg = "Forgotten Password Allows Username Enumeration: " + self.url + self.forgottenPsw
-            report.info(msg)
-            report.WriteTextFile(msg)
+            self.report.info(msg)
+            self.report.WriteTextFile(msg)
 
     # Find directory listing in default directories and module directories
     def DruDirsListing(self):
         msg = "Checking for Directory Listing Enabled ..."
-        report.info(msg)
-        report.WriteTextFile(msg)
+        self.report.info(msg)
+        self.report.WriteTextFile(msg)
         for folder in self.defaultFolders:
-            genericchecker.DirectoryListing(folder)
+            self.genericchecker.DirectoryListing(folder)
         for plugin in self.pluginsFound:
-            genericchecker.DirectoryListing('/modules/' + plugin)
+            self.genericchecker.DirectoryListing('/modules/' + plugin)
 
     # Find modules checking the source code of the main page
     def DruModulesIndex(self):
         msg = "Checking Drupal mudules in the index page"
-        report.verbose(msg)
-        requester.request(self.url, data=None)
+        self.report.verbose(msg)
+        self.requester.request(self.url, data=None)
         self.pluginsFound = re.findall(
-            re.compile('/modules/(.+?)/'), requester.htmltext)
+            re.compile('/modules/(.+?)/'), self.requester.htmltext)
         self.pluginsFound = sorted(set(self.pluginsFound))
 
     # Template to find plugins version
@@ -243,7 +248,7 @@ class DruScan:
     # Find modules via dictionary attack
     def DruModules(self):
         msg = "Search Drupal Modules ..."
-        report.message(msg)
+        self.report.message(msg)
         if not initializer.FullScan:
             self.plugins = self.plugins_small
         # Create Code

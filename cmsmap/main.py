@@ -11,14 +11,14 @@ import urllib.request
 from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 
-from .lib.bruteforcer import bruter
+from .lib.bruteforcer import BruteForcer
 from .lib.coreupdate import updater
 from .lib.exploitdbsearch import searcher
 from .lib.genericchecks import genericchecker
 from .lib.initialize import initializer
 from .lib.postexploit import postexploiter
 from .lib.report import Report
-from .lib.scanner import scanner
+from .lib.scanner import Scanner
 from .version import __version__
 
 
@@ -50,7 +50,7 @@ def main():
             argsscan.add_argument("-f", "--force", help="force scan (W)ordpress, (J)oomla or (D)rupal or (M)oodle", metavar="W/J/D/M", default=None)
             argsscan.add_argument("-F", "--fullscan", help="full scan using large plugin lists. False positives and slow!", action="store_true", default=False)
             argsscan.add_argument("-t", "--threads", help="number of threads (Default 5)", metavar="", default=5)
-            argsscan.add_argument("-a", "--agent", help="set custom user-agent", metavar="")
+            argsscan.add_argument("-a", "--agent", help="set custom user-agent", metavar="", default=False)
             argsscan.add_argument("-rua", "--random-user-agent", action="store_true", help="enable random user-agent for each request", metavar="")
             argsscan.add_argument("-H", "--header", help="add custom header (e.g. 'Authorization: Basic ABCD...')", metavar="")
             argsscan.add_argument("-i", "--input", help="scan multiple targets listed in a given file", metavar="")
@@ -82,6 +82,8 @@ def main():
         sys.exit(1)
 
     report = Report(color=args.color)
+    scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color)
+    bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color)
     initializer.verbose = args.verbose
     initializer.url = args.target
     initializer.threads = args.threads
@@ -174,7 +176,8 @@ def main():
         if args.target.endswith("/"):
             args.target = args.target[:-1]
         try:
-            addr = socket.gethostbyname(urlparse(args.target).hostname)
+            hostname = str(urlparse(url=args.target).hostname)
+            addr = socket.gethostbyname(hostname)
             initializer.url = genericchecker.url = scanner.url = bruter.url = searcher.url = args.target
             msg = "Threads: " + str(initializer.threads)
             report.info(msg)
