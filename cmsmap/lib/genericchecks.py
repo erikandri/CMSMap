@@ -159,6 +159,3 @@ class GenericChecks:
         for file in self.interFiles:
             msg = self.url + "/" + file
             self.report.low(msg)
-
-
-genericchecker = GenericChecks()

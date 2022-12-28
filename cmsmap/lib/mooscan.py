@@ -145,6 +145,3 @@ class MooScan:
         self.report.WriteTextFile(msg)
         for folder in self.defaultFolders:
             self.genericchecker.DirectoryListing(folder)
-
-
-mooscan = MooScan()

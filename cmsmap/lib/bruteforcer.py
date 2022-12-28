@@ -146,6 +146,3 @@ class BruteForcer:
                     msg = "Valid Credentials: " + user + " " + pwd
                     self.report.high(msg)
             self.pswlist.pop()  # remove user
-
-
-bruter = BruteForcer()

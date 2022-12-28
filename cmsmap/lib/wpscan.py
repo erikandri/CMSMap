@@ -358,6 +358,3 @@ class WPScan:
                 if self.currentVer[0] < '4.4':
                     msg = "Website vulnerable to XML-RPC Amplification Brute Force Vulnerability"
                     self.report.medium(msg)
-
-
-wpscan = WPScan()

@@ -111,6 +111,3 @@ class Requester:
             self.response = e.response
             self.htmltext = e
             self.status_code = 404
-
-
-requester = Requester()

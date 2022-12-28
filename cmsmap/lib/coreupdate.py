@@ -314,6 +314,3 @@ class CoreUpdate:
             f = open(defaultFolders, "a")
             f.write(output)
             f.close()
-
-
-updater = CoreUpdate()

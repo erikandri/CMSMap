@@ -127,6 +127,3 @@ class Scanner:
         else:
             msg = "CMSmap forced to scan: " + self.force
             self.report.verbose(msg)
-
-
-scanner = Scanner()

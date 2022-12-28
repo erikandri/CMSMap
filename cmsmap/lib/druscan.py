@@ -264,6 +264,3 @@ class DruScan:
         for r, i in enumerate(self.plugins):
             q.put(i)
         q.join()
-
-
-druscan = DruScan()

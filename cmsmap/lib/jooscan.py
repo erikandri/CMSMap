@@ -199,6 +199,3 @@ class JooScan:
         while not q.empty():
             time.sleep(1)
         q.join()
-
-
-jooscan = JooScan()
