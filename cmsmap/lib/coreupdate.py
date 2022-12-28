@@ -109,7 +109,7 @@ class CoreUpdate:
                     self.report.message(msg)
                     if not initializer.default:
                         if input("[y/N]: ").lower().startswith('y'):
-                            process = os.system("git -C " + self.edbpath + " pull")
+                            os.system("git -C " + self.edbpath + " pull")
                             self.UpdateCMSVersions()
                             self.UpdateLocalPlugins()
                             self.UpdateTmpCMS()
@@ -137,7 +137,7 @@ class CoreUpdate:
                     self.report.message(msg)
                     if not initializer.default:
                         if input("[y/N]: ").lower().startswith('y'):
-                            process = os.system("apt-get install exploitdb")
+                            os.system("apt-get install exploitdb")
                             self.UpdateCMSVersions()
                             self.UpdateLocalPlugins()
                             self.UpdateTmpCMS()
@@ -285,7 +285,7 @@ class CoreUpdate:
                                      universal_newlines=True)
                 output, error = p.communicate()
                 if re.search('behind', output):
-                    process = os.system("git -C " + self.cmsmapPath + "/tmp/" + repo_key + " pull")
+                    os.system("git -C " + self.cmsmapPath + "/tmp/" + repo_key + " pull")
 
                     # Update default files and folder from the local GIT repos of CMSs
 
