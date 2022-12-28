@@ -12,11 +12,11 @@ from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 
 from .lib.bruteforcer import BruteForcer
-from .lib.coreupdate import updater
-from .lib.exploitdbsearch import searcher
-from .lib.genericchecks import genericchecker
+from .lib.coreupdate import CoreUpdate
+from .lib.exploitdbsearch import ExploitDBSearch
+from .lib.genericchecks import GenericChecks
 from .lib.initialize import initializer
-from .lib.postexploit import postexploiter
+from .lib.postexploit import PostExploit
 from .lib.report import Report
 from .lib.scanner import Scanner
 from .version import __version__
@@ -84,6 +84,10 @@ def main():
     report = Report(color=args.color)
     scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color)
     bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color)
+    searcher = ExploitDBSearch(is_color=args.color)
+    postexploiter = PostExploit(is_color=args.color)
+    updater = CoreUpdate(is_color=args.color)
+    genericchecker = GenericChecks(is_random_user_agent=args.random_user_agent, is_color=args.color)
     initializer.verbose = args.verbose
     initializer.url = args.target
     initializer.threads = args.threads

@@ -5,12 +5,12 @@ import subprocess
 import sys
 
 from .initialize import initializer
-from .report import report
+from .report import Report
 
 
 class CoreUpdate:
     # Perfom updates
-    def __init__(self):
+    def __init__(self, is_color: bool = False):
         self.edbpath = initializer.edbpath
         self.edbtype = initializer.edbtype
         self.cmsmapPath = initializer.cmsmapPath
@@ -26,6 +26,7 @@ class CoreUpdate:
         self.dru_versions = initializer.dru_versions
         self.moo_versions = initializer.moo_versions
         self.ospath = initializer.ospath
+        self.report = Report(color=is_color)
 
     # Force update of plugins from the local exploit-db, fetch the CMSs versions from remote Git
     # and run git pull from CMSmap git repo
@@ -43,9 +44,9 @@ class CoreUpdate:
             self.UpdateDefaultFiles()
         else:
             msg = "Not Valid Option Provided. Use (C)MSmap, (P)lugins or (PC) for both"
-            report.message(msg)
+            self.report.message(msg)
             msg = "Example: " + os.path.basename(sys.argv[0]) + " -U PC"
-            report.message(msg)
+            self.report.message(msg)
         self.SortUniqueFile()
         sys.exit(0)
 
@@ -55,23 +56,23 @@ class CoreUpdate:
         success = False
         if not self.ospath + ".git":
             msg = "Git Repository Not Found. Please download the latest version of CMSmap from GitHub repository"
-            report.error(msg)
+            self.report.error(msg)
             msg = "Example: git clone https://github.com/Dionach/cmsmap"
-            report.error(msg)
+            self.report.error(msg)
         else:
             msg = "Updating CMSmap to the latest version from GitHub repository... "
-            report.message(msg)
+            self.report.message(msg)
             os.chdir(self.ospath)
             process = os.system("git pull")
             if process == 0: success = True
         if success:
             msg = "CMSmap is now updated to the latest version!"
-            report.message(msg)
+            self.report.message(msg)
         else:
             msg = " Updated could not be completed. Please download the latest version of CMSmap from GitHub repository"
-            report.error(msg)
+            self.report.error(msg)
             msg = " Example: git clone https://github.com/Dionach/cmsmap"
-            report.error(msg)
+            self.report.error(msg)
 
     # Run sort-uniq on the plugins files
     def SortUniqueFile(self):
@@ -101,9 +102,9 @@ class CoreUpdate:
                 output, error = p.communicate()
                 if re.search('behind', output):
                     msg = "ExploitDB and CMSmap plugins are not updated to the latest version"
-                    report.message(msg)
+                    self.report.message(msg)
                     msg = "Would you like to update it?"
-                    report.message(msg)
+                    self.report.message(msg)
                     if not initializer.default:
                         if input("[y/N]: ").lower().startswith('y'):
                             process = os.system("git -C " + self.edbpath + " pull")
@@ -112,13 +113,13 @@ class CoreUpdate:
                             self.UpdateTmpCMS()
             else:
                 msg = "ExploitDB Git repository was not found"
-                report.error(msg)
+                self.report.error(msg)
                 msg = "Clone ExploitDB repository: git clone https://github.com/offensive-security/exploit-database"
-                report.message(msg)
+                self.report.message(msg)
                 msg = "Then set the ExploitDB path \"edbpath\" in cmsmap.conf"
-                report.message(msg)
+                self.report.message(msg)
                 msg = "ie: edbpath = /opt/exploitdb/"
-                report.message(msg)
+                self.report.message(msg)
                 sys.exit(1)
         elif self.edbtype.lower() == "apt":
             if os.path.exists(self.edbpath):
@@ -129,9 +130,9 @@ class CoreUpdate:
                 output, error = p.communicate()
                 if re.search('Inst exploitdb', output):
                     msg = "ExploitDB and CMSmap plugins are not updated to the latest version"
-                    report.message(msg)
+                    self.report.message(msg)
                     msg = "Would you like to update it?"
-                    report.message(msg)
+                    self.report.message(msg)
                     if not initializer.default:
                         if input("[y/N]: ").lower().startswith('y'):
                             process = os.system("apt-get install exploitdb")
@@ -140,20 +141,20 @@ class CoreUpdate:
                             self.UpdateTmpCMS()
             else:
                 msg = "ExploitDB APT path was not found"
-                report.error(msg)
+                self.report.error(msg)
                 msg = "Set the ExploitDB path \"edbpath\" in cmsmap.conf"
-                report.message(msg)
+                self.report.message(msg)
                 msg = "ie: edbpath = /usr/share/exploitdb/"
-                report.message(msg)
+                self.report.message(msg)
                 sys.exit(1)
         else:
             msg = "ExploitDB GIT or APT settings not found"
-            report.error(msg)
+            self.report.error(msg)
             msg = "Would you like to clone the ExploitDB GIT repository now?"
-            report.message(msg)
+            self.report.message(msg)
             if input("[y/N]: ").lower().startswith('y'):
                 msg = "Where would you like to save it?"
-                report.message(msg)
+                self.report.message(msg)
                 answer = input("Default: /opt/exploit-database: ")
                 if not answer.strip():
                     self.edbpath = "/opt/exploit-database"
@@ -186,9 +187,9 @@ class CoreUpdate:
                     self.UpdateTmpCMS()
             else:
                 msg = "OK. Ensure that either the APT \"exploitdb\" package or ExploitDB GIT repository is installed"
-                report.message(msg)
+                self.report.message(msg)
                 msg = "Then set the \"edbtype\" and \"edbpath\" settings in cmsmap.conf"
-                report.message(msg)
+                self.report.message(msg)
                 sys.exit(1)
 
     # Update CMS versions from remote Git repos
@@ -200,7 +201,7 @@ class CoreUpdate:
 
         for cms_type, cms_file, sorted_versions in local_versions:
             msg = "Updating " + cms_type + " versions"
-            report.message(msg)
+            self.report.message(msg)
             p = subprocess.Popen("git -C " + self.cmsmapPath + "/tmp/" + cms_type + " " + sorted_versions,
                                  stdout=subprocess.PIPE, shell=True, universal_newlines=True)
             output, error = p.communicate()
@@ -250,7 +251,7 @@ class CoreUpdate:
                           initializer.dru_plugins_small)]
         for cms_type, grep_cmd, cms_small_plugin_path in local_plugins:
             msg = "Updating " + cms_type + " small plugins"
-            report.message(msg)
+            self.report.message(msg)
             p = subprocess.Popen(grep_cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
             output, error = p.communicate()
             f = open(cms_small_plugin_path, "a")
@@ -260,7 +261,7 @@ class CoreUpdate:
     # Download and update local GIT repos of CMSs for default files and CMS version detection
     def UpdateTmpCMS(self):
         msg = "Update CMSs in tmp folder"
-        report.verbose(msg)
+        self.report.verbose(msg)
         git_repos = {'wordpress': 'https://github.com/wordpress/wordpress',
                      'joomla': 'https://github.com/joomla/joomla-cms',
                      'drupal': 'https://github.com/drupal/drupal',
@@ -268,7 +269,7 @@ class CoreUpdate:
         for repo_key, repo_value in git_repos.items():
             if not os.path.exists(self.cmsmapPath + "/tmp/" + repo_key + "/.git"):
                 msg = repo_key + " git repo has not been found. Cloning..."
-                report.message(msg)
+                self.report.message(msg)
                 p = subprocess.Popen("git clone " + repo_value + " " + self.cmsmapPath + "/tmp/" + repo_key,
                                      stdout=subprocess.PIPE,
                                      shell=True, universal_newlines=True)
@@ -293,7 +294,7 @@ class CoreUpdate:
                          ('moodle', initializer.moo_defaultFiles, initializer.moo_defaultFolders)]
         for cms_type, defaultFiles, defaultFolders in default_files:
             msg = "Updating " + cms_type + " default files"
-            report.message(msg)
+            self.report.message(msg)
             p = subprocess.Popen("find " + self.cmsmapPath +
                                  "/tmp/" + cms_type + " -type f -name '*.txt' -o -name '*.html' -o -name '*.sql'| sed 's|" + self.cmsmapPath +
                                  "/tmp/" + cms_type + "||g'", stdout=subprocess.PIPE, shell=True,
@@ -304,7 +305,7 @@ class CoreUpdate:
             f.close()
 
             msg = "Updating " + cms_type + " default folders"
-            report.message(msg)
+            self.report.message(msg)
             p = subprocess.Popen("find " + self.cmsmapPath +
                                  "/tmp/" + cms_type + " -maxdepth 2 -type d | sed 's|" + self.cmsmapPath +
                                  "/tmp/" + cms_type + "||g'", stdout=subprocess.PIPE, shell=True,

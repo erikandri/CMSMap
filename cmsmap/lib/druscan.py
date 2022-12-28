@@ -3,7 +3,7 @@ import queue
 import re
 
 from .bruteforcer import BruteForcer
-from .exploitdbsearch import searcher
+from .exploitdbsearch import ExploitDBSearch
 from .genericchecks import GenericChecks
 # Import Objects
 from .initialize import initializer
@@ -41,13 +41,14 @@ class DruScan:
         self.report = Report(color=is_color)
         self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
+        self.searcher = ExploitDBSearch(is_color=is_color)
 
     # Drupal checks
     def Drurun(self):
         msg = "CMS Detection: Drupal"
         self.report.info(msg)
-        searcher.cmstype = "Drupal"
-        searcher.pluginPath = self.pluginPath
+        self.searcher.cmstype = "Drupal"
+        self.searcher.pluginPath = self.pluginPath
         self.DruGetLocalFiles()
         self.DruVersion()
         self.DruCurrentTheme()
@@ -67,8 +68,8 @@ class DruScan:
         self.DruModulesIndex()
         self.DruModules()
         self.DruModulesVersion()
-        searcher.query = self.pluginsFound
-        searcher.OfflinePlugins()
+        self.searcher.query = self.pluginsFound
+        self.searcher.OfflinePlugins()
         self.DruDirsListing()
 
     # Grab the small plugins, versions and default files generated at run time
@@ -91,8 +92,8 @@ class DruScan:
             self.report.info(msg)
             if version[0] in self.versions:
                 for ver in self.versions:
-                    searcher.query = ver
-                    searcher.OfflineCore()
+                    self.searcher.query = ver
+                    self.searcher.OfflineCore()
                     if ver == version[0]:
                         break
 
@@ -106,8 +107,8 @@ class DruScan:
             self.Drutheme = DruTheme[0]
             msg = "Drupal Theme: " + self.Drutheme
             self.report.info(msg)
-            searcher.query = self.Drutheme
-            searcher.OfflineTheme()
+            self.searcher.query = self.Drutheme
+            self.searcher.OfflineTheme()
 
     # Find old or temp Drupal conf files left on the web root
     def DruConfigFiles(self):

@@ -4,7 +4,7 @@ import re
 import time
 
 from .bruteforcer import BruteForcer
-from .exploitdbsearch import searcher
+from .exploitdbsearch import ExploitDBSearch
 from .genericchecks import GenericChecks
 # Import Object
 from .initialize import initializer
@@ -48,13 +48,14 @@ class WPScan:
         self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
         self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.searcher = ExploitDBSearch(is_color=is_color)
 
     # WordPress checks
     def WPrun(self):
         msg = "CMS Detection: WordPress"
         self.report.info(msg)
-        searcher.cmstype = "Wordpress"
-        searcher.pluginPath = self.pluginPath
+        self.searcher.cmstype = "Wordpress"
+        self.searcher.pluginPath = self.pluginPath
         self.WPGetLocalFiles()
         self.WPVersion()
         self.WPCurrentTheme()
@@ -80,8 +81,8 @@ class WPScan:
         self.WPpluginsIndex()
         self.WPplugins()
         self.WPpluginsVersion()
-        searcher.query = self.pluginsFound
-        searcher.OfflinePlugins()
+        self.searcher.query = self.pluginsFound
+        self.searcher.OfflinePlugins()
         if initializer.FullScan:
             self.WPTimThumbs()
         self.WPDirsListing()
@@ -114,8 +115,8 @@ class WPScan:
         if self.currentVer:
             if self.currentVer[0] in self.versions:
                 for ver in self.versions:
-                    searcher.query = ver
-                    searcher.OfflineCore()
+                    self.searcher.query = ver
+                    self.searcher.OfflineCore()
                     if ver == self.currentVer[0]:
                         break
 
@@ -131,8 +132,8 @@ class WPScan:
             self.theme = CurrentTheme[0]
             msg = "Wordpress Theme: " + self.theme
             self.report.info(msg)
-            searcher.query = self.theme
-            searcher.OfflineTheme()
+            self.searcher.query = self.theme
+            self.searcher.OfflineTheme()
 
     # Find old or temp WordPress config files left on the web root
     def WPConfigFiles(self):

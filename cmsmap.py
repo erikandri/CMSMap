@@ -2,12 +2,13 @@
 import signal
 import sys
 
-from cmsmap.lib.report import report
+from cmsmap.lib.report import Report
 from cmsmap.main import main
 
 
 def exit(signum, frame):
     signal.signal(signal.SIGINT, original_sigint)
+    report = Report()
     try:
         msg = "Interrupt caught. CMSmap paused. Do you really want to exit?"
         report.error(msg)

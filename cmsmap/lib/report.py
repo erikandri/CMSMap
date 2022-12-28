@@ -90,6 +90,3 @@ class Report:
 
     def WriteHTMLFile(self):
         pass
-
-
-report = Report()

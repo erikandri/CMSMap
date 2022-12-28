@@ -3,7 +3,7 @@ import hashlib
 import os
 import subprocess
 
-from .exploitdbsearch import searcher
+from .exploitdbsearch import ExploitDBSearch
 from .genericchecks import GenericChecks
 # Import Objects
 from .initialize import initializer
@@ -30,13 +30,14 @@ class MooScan:
         self.report = Report(color=is_color)
         self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
+        self.searcher = ExploitDBSearch(is_color=is_color)
 
     # Moodle checks
     def Moorun(self):
         msg = "CMS Detection: Moodle"
         self.report.info(msg)
-        searcher.cmstype = "Moodle"
-        searcher.pluginPath = self.pluginPath
+        self.searcher.cmstype = "Moodle"
+        self.searcher.pluginPath = self.pluginPath
         self.MooGetLocalFiles()
         self.MooConfigFiles()
         self.MooDefaultFiles()

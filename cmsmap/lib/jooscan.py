@@ -4,7 +4,7 @@ import re
 import time
 
 from .bruteforcer import BruteForcer
-from .exploitdbsearch import searcher
+from .exploitdbsearch import ExploitDBSearch
 from .genericchecks import GenericChecks
 # Import Objects
 from .initialize import initializer
@@ -31,14 +31,15 @@ class JooScan:
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
         self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
         self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.searcher = ExploitDBSearch(is_color=is_color)
 
     # Joomla checks
     def Joorun(self):
         msg = "CMS Detection: Joomla"
         self.report.info(msg)
-        searcher.cmstype = "Joomla"
-        searcher.pluginPath = self.pluginPath
-        searcher.exclude = self.excludeEDBPlugins
+        self.searcher.cmstype = "Joomla"
+        self.searcher.pluginPath = self.pluginPath
+        self.searcher.exclude = self.excludeEDBPlugins
         self.JooGetLocalFiles()
         self.JooVersion()
         self.JooTemplate()
@@ -53,10 +54,10 @@ class JooScan:
         if initializer.FullScan: self.genericchecker.CommonFiles()
         self.JooModulesIndex()
         self.JooComponents()
-        if not initializer.FullScan: searcher.exclude = self.excludeEDBPlugins
+        if not initializer.FullScan: self.searcher.exclude = self.excludeEDBPlugins
         self.JooComponentsVersion()
-        searcher.query = self.pluginsFound
-        searcher.OfflinePlugins()
+        self.searcher.query = self.pluginsFound
+        self.searcher.OfflinePlugins()
         self.JooDirsListing()
 
     # Grab the small plugins, versions and default files generated at run time
@@ -79,8 +80,8 @@ class JooScan:
             self.report.info(msg)
             if version[0] in self.versions:
                 for ver in self.versions:
-                    searcher.query = ver
-                    searcher.OfflineCore()
+                    self.searcher.query = ver
+                    self.searcher.OfflineCore()
                     if ver == version[0]:
                         break
 
@@ -98,14 +99,14 @@ class JooScan:
             for WebTemplate in WebTemplates:
                 msg = "Joomla Website Template: " + WebTemplate
                 self.report.info(msg)
-                searcher.query = WebTemplate
-                searcher.OfflineTheme()
+                self.searcher.query = WebTemplate
+                self.searcher.OfflineTheme()
         if AdminTemplates:
             for AdminTemplate in AdminTemplates:
                 msg = "Joomla Administrator Template: " + AdminTemplate
                 self.report.info(msg)
-                searcher.query = AdminTemplate
-                searcher.OfflineTheme()
+                self.searcher.query = AdminTemplate
+                self.searcher.OfflineTheme()
 
     # Find old or temp Joomla config files left on the web root
     def JooConfigFiles(self):
