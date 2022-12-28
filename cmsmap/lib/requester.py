@@ -65,7 +65,7 @@ class Requester:
             self.status_code = self.response.status_code
         except requests.RequestException as e:
             self.response = e.response
-            self.htmltext = e
+            self.htmltext = ""
             self.status_code = 404
 
     def noredirect(self, url, data):
@@ -87,7 +87,7 @@ class Requester:
             self.status_code = self.response.status_code
         except requests.RequestException as e:
             self.response = e.response
-            self.htmltext = e
+            self.htmltext = ""
             self.status_code = 404
 
     def requestcookie(self, url, data):
@@ -109,5 +109,5 @@ class Requester:
             self.status_code = self.response.status_code
         except requests.RequestException as e:
             self.response = e.response
-            self.htmltext = e
+            self.htmltext = ""
             self.status_code = 404
