@@ -287,7 +287,7 @@ class WPScan:
             for timthumbsFound in self.timthumbsFound:
                 msg = self.url + "/" + timthumbsFound
                 self.report.medium(msg)
-            msg = " Timthumbs Potentially Vulnerable to File Upload: http://www.exploit-db.com/wordpress-timthumb-exploitation"
+            msg = " Timthumbs Potentially Vulnerable to File Upload: https://www.exploit-db.com/wordpress-timthumb-exploitation"
             self.report.medium(msg)
 
     # Find other WordPress installed via a dictionary attack
