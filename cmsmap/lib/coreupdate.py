@@ -75,7 +75,8 @@ class CoreUpdate:
             self.report.error(msg)
 
     # Run sort-uniq on the plugins files
-    def SortUniqueFile(self):
+    @staticmethod
+    def SortUniqueFile():
         for list in [
             initializer.wp_plugins, initializer.wp_plugins_small, initializer.wp_themes_small,
             initializer.wp_defaultFiles, initializer.wp_defaultFolders,
