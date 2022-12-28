@@ -242,8 +242,7 @@ class WPScan:
         q = queue.Queue()
         # Spawn all threads into code
         for u in range(initializer.threads):
-            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen,
-                              q)
+            t = ThreadScanner(self.url, self.pluginPath, "/", self.pluginsFound, self.notExistingCode, self.notValidLen, q)
             t.daemon = True
             t.start()
         # Add all plugins to the queue
