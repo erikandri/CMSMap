@@ -15,7 +15,7 @@ from .threadscanner import ThreadScanner
 
 class DruScan:
     # Scan Drupal site
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.pluginsFoundVers = None
         self.postdata = None
         self.forgottenPsw = None
@@ -29,7 +29,7 @@ class DruScan:
         self.defaultFiles = None
         self.versions = None
         self.plugins_small = None
-        self.url = None
+        self.url = url
         self.notExistingCode = 404
         self.notValidLen = []
         self.pluginPath = "/modules/"
@@ -37,11 +37,11 @@ class DruScan:
         self.usernames = []
         self.pluginsFound = []
         self.plugins = [line.strip() for line in open(initializer.dru_plugins, encoding='utf-8')]
-        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
         self.report = Report(color=is_color)
-        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
-        self.searcher = ExploitDBSearch(is_color=is_color)
+        self.searcher = ExploitDBSearch(is_color=is_color, url=url)
 
     # Drupal checks
     def Drurun(self):

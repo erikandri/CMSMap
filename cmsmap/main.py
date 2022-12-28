@@ -83,12 +83,12 @@ def main():
         sys.exit(1)
 
     report = Report(color=args.color)
-    scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color)
-    bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color)
-    searcher = ExploitDBSearch(is_color=args.color)
     postexploiter = PostExploit(is_color=args.color)
     updater = CoreUpdate(is_color=args.color)
-    genericchecker = GenericChecks(is_random_user_agent=args.random_user_agent, is_color=args.color)
+    searcher = ExploitDBSearch(is_color=args.color, url=args.target)
+    bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+    scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+    genericchecker = GenericChecks(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
     initializer.verbose = args.verbose
     initializer.url = args.target
     initializer.threads = args.threads
@@ -135,6 +135,10 @@ def main():
             if url.endswith("/"):
                 url = url[:-1]
             try:
+                searcher = ExploitDBSearch(is_color=args.color, url=args.target)
+                bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+                scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+                genericchecker = GenericChecks(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
                 initializer.url = genericchecker.url = scanner.url = bruter.url = searcher.url = url
                 addr = socket.gethostbyname(urlparse(url).hostname)
                 msg = "Target: " + scanner.url + " (" + addr + ")"
@@ -161,6 +165,10 @@ def main():
             if url.endswith("/"):
                 url = url[:-1]
             try:
+                searcher = ExploitDBSearch(is_color=args.color, url=args.target)
+                bruter = BruteForcer(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+                scanner = Scanner(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
+                genericchecker = GenericChecks(is_random_user_agent=args.random_user_agent, is_color=args.color, url=args.target)
                 initializer.url = genericchecker.url = scanner.url = bruter.url = searcher.url = url
                 addr = socket.gethostbyname(urlparse(url).hostname)
                 msg = "Threads: " + str(initializer.threads)

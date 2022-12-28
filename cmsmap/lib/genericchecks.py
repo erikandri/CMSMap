@@ -16,11 +16,11 @@ from .threadscanner import ThreadScanner
 # Perform web application generic checks
 class GenericChecks:
 
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.interFiles = None
         self.NotExistingPage = None
         self.relPath = None
-        self.url = None
+        self.url = url
         self.headers = initializer.headers
         self.notExistingCode = 404
         self.thread_num = 5

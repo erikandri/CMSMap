@@ -16,21 +16,21 @@ from .wpscan import WPScan
 
 class Scanner:
     # Main class for scanning the website
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.headers = initializer.headers
-        self.url = None
+        self.url = url
         self.force = None
         self.file = None
         self.notExistingCode = 404
         self.notValidLen = []
         self.report = Report(color=is_color)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
-        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.wpscan = WPScan(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.jooscan = JooScan(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.druscan = DruScan(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.mooscan = MooScan(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.wpscan = WPScan(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.jooscan = JooScan(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.druscan = DruScan(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.mooscan = MooScan(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
 
     # Execute some initial checks and then attempt to identify the type of CMS
     def RunScanner(self):

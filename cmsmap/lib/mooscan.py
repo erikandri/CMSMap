@@ -16,12 +16,12 @@ from .requester import Requester
 
 class MooScan:
     # Scan Moodle site
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.versions = None
         self.defaultFiles = None
         self.defaultFolders = None
         self.defFilesFound = None
-        self.url = None
+        self.url = url
         self.usernames = []
         # Plugins can be in /local /blocks /mod
         self.pluginPath = "/local"
@@ -32,9 +32,9 @@ class MooScan:
         # No plugins for moodle
         # self.plugins = [line.strip() for line in open(initializer.moo_plugins, encoding='utf-8')]
         self.report = Report(color=is_color)
-        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
-        self.searcher = ExploitDBSearch(is_color=is_color)
+        self.searcher = ExploitDBSearch(is_color=is_color, url=url)
 
     # Moodle checks
     def Moorun(self):

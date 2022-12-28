@@ -16,14 +16,14 @@ from .threadscanner import ThreadScanner
 
 class JooScan:
     # Scan Joomla site
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.plugins_small = None
         self.versions = None
         self.defaultFiles = None
         self.defaultFolders = None
         self.defFilesFound = None
         self.pluginsFoundVers = None
-        self.url = None
+        self.url = url
         self.usernames = []
         self.pluginPath = "?option="
         self.pluginsFound = []
@@ -35,9 +35,9 @@ class JooScan:
         self.plugins = [line.strip() for line in open(initializer.joo_plugins, encoding='utf-8')]
         self.report = Report(color=is_color)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
-        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.searcher = ExploitDBSearch(is_color=is_color)
+        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.searcher = ExploitDBSearch(is_color=is_color, url=url)
 
     # Joomla checks
     def Joorun(self):

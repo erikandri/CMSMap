@@ -16,7 +16,7 @@ from .threadscanner import ThreadScanner
 
 class WPScan:
     # Scan WordPress site
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.defFilesFound = None
         self.pluginsFoundVers = None
         self.postdata = None
@@ -24,7 +24,7 @@ class WPScan:
         self.defaultFiles = None
         self.versions = None
         self.plugins_small = None
-        self.url = None
+        self.url = url
         self.currentVer = None
         self.latestVer = None
         self.pluginPath = "/wp-content/plugins/"
@@ -46,10 +46,10 @@ class WPScan:
         self.themes_small = [line.strip() for line in open(initializer.wp_themes_small, encoding='utf-8')]
         self.timthumbs = [line.strip() for line in open(initializer.wp_timthumbs, encoding='utf-8')]
         self.report = Report(color=is_color)
-        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color)
+        self.bruter = BruteForcer(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
         self.requester = Requester(is_random_user_agent=is_random_user_agent)
-        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color)
-        self.searcher = ExploitDBSearch(is_color=is_color)
+        self.genericchecker = GenericChecks(is_random_user_agent=is_random_user_agent, is_color=is_color, url=url)
+        self.searcher = ExploitDBSearch(is_color=is_color, url=url)
 
     # WordPress checks
     def WPrun(self):

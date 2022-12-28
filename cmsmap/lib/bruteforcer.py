@@ -13,7 +13,7 @@ from .requester import Requester
 # Perform brute-force, dictionary attacks
 class BruteForcer:
 
-    def __init__(self, is_random_user_agent: bool = False, is_color: bool = False):
+    def __init__(self, url: str, is_random_user_agent: bool = False, is_color: bool = False):
         self.postdata = None
         self.wplogin = None
         self.postdata = None
@@ -24,7 +24,7 @@ class BruteForcer:
         self.DruValidCredentials = None
         self.force = None
         self.wpnoxmlrpc = True
-        self.url = None
+        self.url = url
         self.usrlist = None
         self.pswlist = None
         self.dictattack = None
