@@ -36,14 +36,13 @@ class Requester:
         # you can also import SoftwareEngine, HardwareType, SoftwareType, Popularity from random_user_agent.params
         # you can also set number of user agents required by providing limit as parameter
 
-        software_names = [SoftwareName.CHROME.value]
+        software_names = [SoftwareName.CHROME.value, SoftwareName.FIREFOX.value]
         operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
 
         user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems, limit=100)
 
         # Get Random User Agent String.
         user_agent = user_agent_rotator.get_random_user_agent()
-
         return user_agent
 
     def request(self, url, data):
@@ -60,7 +59,7 @@ class Requester:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers, verify=False)
             else:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers)
-            self.response.raise_for_status()
+            # self.response.raise_for_status()
             self.htmltext = self.response.text
             self.status_code = self.response.status_code
         except requests.RequestException as e:
@@ -82,7 +81,7 @@ class Requester:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers, verify=False, allow_redirects=False)
             else:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers, allow_redirects=False)
-            self.response.raise_for_status()
+            # self.response.raise_for_status()
             self.htmltext = self.response.text
             self.status_code = self.response.status_code
         except requests.RequestException as e:
@@ -104,7 +103,7 @@ class Requester:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers, cookies=self.cookieJar, verify=False)
             else:
                 self.response = requests.get(url=self.url, data=data, headers=self.headers, cookies=self.cookieJar)
-            self.response.raise_for_status()
+            # self.response.raise_for_status()
             self.htmltext = self.response.text
             self.status_code = self.response.status_code
         except requests.RequestException as e:
