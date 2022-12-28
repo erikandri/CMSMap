@@ -18,7 +18,7 @@ Installation
 =====
 You can download the latest version of CMSmap by cloning the GitHub repository:
 
-     git clone https://github.com/Dionach/CMSmap
+     git clone https://github.com/erikandri/CMSMap.git
 
 Then you need to configure the `edbtype` and `edbpath` settings in the `cmsmap.conf`. Use `GIT` if you have a local Git repository of Exploit-db :
 
