@@ -80,31 +80,32 @@ class GenericChecks:
         self.requester.request(self.url, data=None)
         msg = "Checking headers ..."
         self.report.verbose(msg)
-        if self.requester.response.headers.get('Server'):
-            msg = "Server: " + self.requester.response.headers.get('Server')
-            self.report.info(msg)
-        if self.requester.response.headers.get('X-Powered-By'):
-            msg = "X-Powered-By: " + self.requester.response.headers.get('X-Powered-By')
-            self.report.info(msg)
-        if self.requester.response.headers.get('X-Generator'):
-            msg = "X-Generator: " + self.requester.response.headers.get('X-Generator')
-            self.report.low(msg)
-        if self.requester.response.headers.get('x-xss-protection') == '0':
-            msg = "X-XSS-Protection Disabled"
-            self.report.high(msg)
-        if not self.requester.response.headers.get('x-frame-options') or (
-                self.requester.response.headers.get('x-frame-options').lower() != 'sameorigin' or 'deny'):
-            msg = "X-Frame-Options: Not Enforced"
-            self.report.low(msg)
-        if not self.requester.response.headers.get('strict-transport-security'):
-            msg = "Strict-Transport-Security: Not Enforced"
-            self.report.info(msg)
-        if not self.requester.response.headers.get('x-content-security-policy'):
-            msg = "X-Content-Security-Policy: Not Enforced"
-            self.report.info(msg)
-        if not self.requester.response.headers.get('x-content-type-options'):
-            msg = "X-Content-Type-Options: Not Enforced"
-            self.report.info(msg)
+        if self.requester.response:
+            if self.requester.response.headers.get('Server'):
+                msg = "Server: " + self.requester.response.headers.get('Server')
+                self.report.info(msg)
+            if self.requester.response.headers.get('X-Powered-By'):
+                msg = "X-Powered-By: " + self.requester.response.headers.get('X-Powered-By')
+                self.report.info(msg)
+            if self.requester.response.headers.get('X-Generator'):
+                msg = "X-Generator: " + self.requester.response.headers.get('X-Generator')
+                self.report.low(msg)
+            if self.requester.response.headers.get('x-xss-protection') == '0':
+                msg = "X-XSS-Protection Disabled"
+                self.report.high(msg)
+            if not self.requester.response.headers.get('x-frame-options') or (
+                    self.requester.response.headers.get('x-frame-options').lower() != 'sameorigin' or 'deny'):
+                msg = "X-Frame-Options: Not Enforced"
+                self.report.low(msg)
+            if not self.requester.response.headers.get('strict-transport-security'):
+                msg = "Strict-Transport-Security: Not Enforced"
+                self.report.info(msg)
+            if not self.requester.response.headers.get('x-content-security-policy'):
+                msg = "X-Content-Security-Policy: Not Enforced"
+                self.report.info(msg)
+            if not self.requester.response.headers.get('x-content-type-options'):
+                msg = "X-Content-Type-Options: Not Enforced"
+                self.report.info(msg)
 
     # Check if AutoComplete is set to Off on login pages
     def AutocompleteOff(self, relPath):
