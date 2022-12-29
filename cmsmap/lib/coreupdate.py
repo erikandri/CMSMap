@@ -57,7 +57,7 @@ class CoreUpdate:
         if not self.ospath + ".git":
             msg = "Git Repository Not Found. Please download the latest version of CMSmap from GitHub repository"
             self.report.error(msg)
-            msg = "Example: git clone https://github.com/Dionach/cmsmap"
+            msg = "Example: git clone https://github.com/erikandri/CMSMap.git"
             self.report.error(msg)
         else:
             msg = "Updating CMSmap to the latest version from GitHub repository... "
@@ -72,7 +72,7 @@ class CoreUpdate:
         else:
             msg = " Updated could not be completed. Please download the latest version of CMSmap from GitHub repository"
             self.report.error(msg)
-            msg = " Example: git clone https://github.com/Dionach/cmsmap"
+            msg = " Example: git clone https://github.com/erikandri/CMSMap.git"
             self.report.error(msg)
 
     # Run sort-uniq on the plugins files

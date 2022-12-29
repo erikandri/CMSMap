@@ -12,7 +12,7 @@ setup(
     description='CMS vulnerability scanner',
     author='Mike Manzotti',
     # author_email='',
-    url='https://github.com/Dionach/CMSmap',
+    url='https://github.com/erikandri/CMSMap.git',
     license='GPL',
     packages=find_packages(),
     package_data={'': ['*.conf', '*.txt', '*.zip']},
@@ -20,5 +20,6 @@ setup(
         'cmsmap = cmsmap.main:main',
     ]},
     install_requires=[
-        #'package>=version'
+        'requests>=2.28.1',
+        'random-user-agent>=1.0.1'
     ])
